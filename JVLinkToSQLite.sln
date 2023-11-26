@@ -1,0 +1,74 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34003.232
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JVLinkToSQLite", "JVLinkToSQLite\JVLinkToSQLite.csproj", "{E94B9986-6B55-410C-A808-0948C17DE7EF}"
+	ProjectSection(ProjectDependencies) = preProject
+		{BE380D80-05BB-40C9-AAF2-6B51961B3AF8} = {BE380D80-05BB-40C9-AAF2-6B51961B3AF8}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Urasandesu.JVLinkToSQLite", "Urasandesu.JVLinkToSQLite\Urasandesu.JVLinkToSQLite.csproj", "{BE380D80-05BB-40C9-AAF2-6B51961B3AF8}"
+	ProjectSection(ProjectDependencies) = preProject
+		{3FFF3272-96BE-459C-A3B0-B03E6898562E} = {3FFF3272-96BE-459C-A3B0-B03E6898562E}
+		{42D063D8-C7CB-4264-A296-B360A54C45D9} = {42D063D8-C7CB-4264-A296-B360A54C45D9}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Urasandesu.JVLinkToSQLite", "Test.Urasandesu.JVLinkToSQLite\Test.Urasandesu.JVLinkToSQLite.csproj", "{196F1891-FDCA-4883-8442-FBF1DB623021}"
+	ProjectSection(ProjectDependencies) = preProject
+		{BE380D80-05BB-40C9-AAF2-6B51961B3AF8} = {BE380D80-05BB-40C9-AAF2-6B51961B3AF8}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObfuscatedResources", "ObfuscatedResources\ObfuscatedResources.csproj", "{3FFF3272-96BE-459C-A3B0-B03E6898562E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Urasandesu.JVLinkToSQLite.Basis", "Urasandesu.JVLinkToSQLite.Basis\Urasandesu.JVLinkToSQLite.Basis.csproj", "{42D063D8-C7CB-4264-A296-B360A54C45D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Urasandesu.JVLinkToSQLite.Basis", "Test.Urasandesu.JVLinkToSQLite.Basis\Test.Urasandesu.JVLinkToSQLite.Basis.csproj", "{8CF30652-C01F-4C6A-85E0-0C907887372F}"
+	ProjectSection(ProjectDependencies) = preProject
+		{42D063D8-C7CB-4264-A296-B360A54C45D9} = {42D063D8-C7CB-4264-A296-B360A54C45D9}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Urasandesu.JVLinkToSQLite.JVData", "Test.Urasandesu.JVLinkToSQLite.JVData\Test.Urasandesu.JVLinkToSQLite.JVData.csproj", "{C9F05A67-7607-4146-AF1A-595A93618061}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E94B9986-6B55-410C-A808-0948C17DE7EF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E94B9986-6B55-410C-A808-0948C17DE7EF}.Debug|x86.Build.0 = Debug|Any CPU
+		{E94B9986-6B55-410C-A808-0948C17DE7EF}.Release|x86.ActiveCfg = Release|Any CPU
+		{E94B9986-6B55-410C-A808-0948C17DE7EF}.Release|x86.Build.0 = Release|Any CPU
+		{BE380D80-05BB-40C9-AAF2-6B51961B3AF8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BE380D80-05BB-40C9-AAF2-6B51961B3AF8}.Debug|x86.Build.0 = Debug|Any CPU
+		{BE380D80-05BB-40C9-AAF2-6B51961B3AF8}.Release|x86.ActiveCfg = Release|Any CPU
+		{BE380D80-05BB-40C9-AAF2-6B51961B3AF8}.Release|x86.Build.0 = Release|Any CPU
+		{196F1891-FDCA-4883-8442-FBF1DB623021}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{196F1891-FDCA-4883-8442-FBF1DB623021}.Debug|x86.Build.0 = Debug|Any CPU
+		{196F1891-FDCA-4883-8442-FBF1DB623021}.Release|x86.ActiveCfg = Release|Any CPU
+		{196F1891-FDCA-4883-8442-FBF1DB623021}.Release|x86.Build.0 = Release|Any CPU
+		{3FFF3272-96BE-459C-A3B0-B03E6898562E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3FFF3272-96BE-459C-A3B0-B03E6898562E}.Debug|x86.Build.0 = Debug|Any CPU
+		{3FFF3272-96BE-459C-A3B0-B03E6898562E}.Release|x86.ActiveCfg = Release|Any CPU
+		{3FFF3272-96BE-459C-A3B0-B03E6898562E}.Release|x86.Build.0 = Release|Any CPU
+		{42D063D8-C7CB-4264-A296-B360A54C45D9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{42D063D8-C7CB-4264-A296-B360A54C45D9}.Debug|x86.Build.0 = Debug|Any CPU
+		{42D063D8-C7CB-4264-A296-B360A54C45D9}.Release|x86.ActiveCfg = Release|Any CPU
+		{42D063D8-C7CB-4264-A296-B360A54C45D9}.Release|x86.Build.0 = Release|Any CPU
+		{8CF30652-C01F-4C6A-85E0-0C907887372F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8CF30652-C01F-4C6A-85E0-0C907887372F}.Debug|x86.Build.0 = Debug|Any CPU
+		{8CF30652-C01F-4C6A-85E0-0C907887372F}.Release|x86.ActiveCfg = Release|Any CPU
+		{8CF30652-C01F-4C6A-85E0-0C907887372F}.Release|x86.Build.0 = Release|Any CPU
+		{C9F05A67-7607-4146-AF1A-595A93618061}.Debug|x86.ActiveCfg = Debug|x86
+		{C9F05A67-7607-4146-AF1A-595A93618061}.Debug|x86.Build.0 = Debug|x86
+		{C9F05A67-7607-4146-AF1A-595A93618061}.Release|x86.ActiveCfg = Release|x86
+		{C9F05A67-7607-4146-AF1A-595A93618061}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E11B0BE-FAC4-407C-89DB-DF9AC747B25D}
+	EndGlobalSection
+EndGlobal

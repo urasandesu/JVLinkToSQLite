@@ -1,0 +1,104 @@
+﻿<#
+// JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQLite データベースに変換するツールです。
+// 
+// Copyright (C) 2023 Akira Sugiura
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// 
+// Additional permission under GNU GPL version 3 section 7
+// 
+// If you modify this Program, or any covered work, by linking or combining it with 
+// ObscUra (or a modified version of that library), containing parts covered 
+// by the terms of ObscUra's license, the licensors of this Program grant you 
+// additional permission to convey the resulting work.
+#>
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="$(JVLinkToSQLiteBasisBin)\Mono.Cecil.dll" #>
+<#@ assembly name="$(JVLinkToSQLiteBasisBin)\Mono.Cecil.Rocks.dll" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(JVLinkToSQLiteBasisBin)\Urasandesu.JVLinkToSQLite.Basis.dll" #>
+<#@ import namespace="Mono.Cecil" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="Urasandesu.JVLinkToSQLite.Basis.JVLinkWrappers.DataBridges" #>
+<#@ output extension=".g.cs" #>
+// JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQLite データベースに変換するツールです。
+// 
+// Copyright (C) 2023 Akira Sugiura
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// 
+// Additional permission under GNU GPL version 3 section 7
+// 
+// If you modify this Program, or any covered work, by linking or combining it with 
+// ObscUra (or a modified version of that library), containing parts covered 
+// by the terms of ObscUra's license, the licensors of this Program grant you 
+// additional permission to convey the resulting work.
+
+namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers.DataBridges
+{
+    public partial class JVDataStructInsertSources : JVDataStructCommandTextSources
+    {
+<#
+var jvLinkToSQLiteJVDataBin = Path.Combine(new CsprojPathFinder().find__Urasandesu_JVLinkToSQLite_JVData(), @"bin");
+var columntts = new JVDataStructColumnTextTemplateFactory().NewAll(Path.Combine(jvLinkToSQLiteJVDataBin, "Urasandesu.JVLinkToSQLite.JVData.dll"));
+var columnttDict = new Dictionary<string, IEnumerable<JVDataStructColumnTextTemplate>>();
+foreach (var gj in columntts.GroupBy(_ => _.Id))
+{
+    if (JVDataStructTypes.IsJVDataStructTypeId(gj.Key))
+    {
+#>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly JVDataStructInsertSources <#= gj.Key #> = new JVDataStructInsertSources() { Name = nameof(<#= gj.Key #>), Value = ToTextTemplate(JVDataStructColumns.<#= gj.Key #>) };
+<#
+        columnttDict[gj.Key] = gj;
+        if (JVDataStructTypes.HasConditionalColumnId(gj.Key))
+        {
+#>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly JVDataStructInsertSources <#= gj.Key #>Conditional = new JVDataStructInsertSources() { Name = nameof(<#= gj.Key #>), Value = ToTextTemplate(JVDataStructColumns.<#= gj.Key #>Conditional) };
+<#
+        }
+    }
+    else
+    {
+        var pgj = columnttDict[JVDataStructTypes.ExtractJVDataStructTypeId(gj.Key)];
+#>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly JVDataStructInsertSources <#= gj.Key #> = new JVDataStructInsertSources() { Name = nameof(<#= gj.Key #>), Value = ToTextTemplate(JVDataStructColumns.<#= gj.Key #>) };
+<#
+    }
+}
+#>
+    }
+}
+
+<#@ include file="PrimitiveTypeTextTemplate.t4" once="true"#>
+<#@ include file="JVDataStructTypes.t4" once="true"#>
+<#@ include file="JVDataStructColumnTextTemplate.t4" once="true"#>
+<#@ include file="JVDataStructColumnTextTemplateFactory.t4" once="true"#>
+<#@ include file="FieldIndex.t4" once="true"#>
+<#@ include file="CsprojPathFinder.t4" once="true"#>

@@ -1,0 +1,62 @@
+﻿// JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQLite データベースに変換するツールです。
+// 
+// Copyright (C) 2023 Akira Sugiura
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// 
+// Additional permission under GNU GPL version 3 section 7
+// 
+// If you modify this Program, or any covered work, by linking or combining it with 
+// ObscUra (or a modified version of that library), containing parts covered 
+// by the terms of ObscUra's license, the licensors of this Program grant you 
+// additional permission to convey the resulting work.
+
+using System;
+using System.IO;
+
+internal class CsprojPathFinder
+{
+    public string find__Urasandesu_JVLinkToSQLite_csproj()
+    {
+        var curDirPath = Environment_CurrentDirectory();
+        var resultPath = Path.Combine(Environment_CurrentDirectory(), "Urasandesu.JVLinkToSQLite.csproj");
+        if (File.Exists(resultPath))
+        {
+            return resultPath;
+        }
+
+        resultPath = Path.Combine(curDirPath, @"Urasandesu.JVLinkToSQLite\Urasandesu.JVLinkToSQLite.csproj");
+        if (File.Exists(resultPath))
+        {
+            return resultPath;
+        }
+
+        throw new NotSupportedException("本処理は、Urasandesu.JVLinkToSQLite.csproj に属すいずれかの T4 テンプレート上で実行する必要があります。");
+    }
+
+    public string find__Urasandesu_JVLinkToSQLite_JVData()
+    {
+        var path__Urasandesu_JVLinkToSQLite_csproj = find__Urasandesu_JVLinkToSQLite_csproj();
+        var resultPath = Path.Combine(Directory.GetParent(path__Urasandesu_JVLinkToSQLite_csproj).Parent.FullName,
+                                      @"Urasandesu.JVLinkToSQLite.JVData");
+        if (Directory.Exists(resultPath))
+        {
+            return resultPath;
+        }
+
+        throw new NotSupportedException("本処理は、Urasandesu.JVLinkToSQLite.csproj に属すいずれかの T4 テンプレート上で実行する必要があります。");
+    }
+
+    internal Func<string> Environment_CurrentDirectory { get; set; } = () => Environment.CurrentDirectory;
+}

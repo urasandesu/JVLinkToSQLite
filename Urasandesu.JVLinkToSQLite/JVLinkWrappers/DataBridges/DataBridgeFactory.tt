@@ -1,0 +1,129 @@
+﻿<#
+// JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQLite データベースに変換するツールです。
+// 
+// Copyright (C) 2023 Akira Sugiura
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// 
+// Additional permission under GNU GPL version 3 section 7
+// 
+// If you modify this Program, or any covered work, by linking or combining it with 
+// ObscUra (or a modified version of that library), containing parts covered 
+// by the terms of ObscUra's license, the licensors of this Program grant you 
+// additional permission to convey the resulting work.
+#>
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="$(JVLinkToSQLiteBasisBin)\Mono.Cecil.dll" #>
+<#@ assembly name="$(JVLinkToSQLiteBasisBin)\Mono.Cecil.Rocks.dll" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(JVLinkToSQLiteBasisBin)\Urasandesu.JVLinkToSQLite.Basis.dll" #>
+<#@ import namespace="Mono.Cecil" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="Urasandesu.JVLinkToSQLite.Basis.JVLinkWrappers.DataBridges" #>
+<#@ output extension=".g.cs" #>
+// JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQLite データベースに変換するツールです。
+// 
+// Copyright (C) 2023 Akira Sugiura
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// 
+// Additional permission under GNU GPL version 3 section 7
+// 
+// If you modify this Program, or any covered work, by linking or combining it with 
+// ObscUra (or a modified version of that library), containing parts covered 
+// by the terms of ObscUra's license, the licensors of this Program grant you 
+// additional permission to convey the resulting work.
+
+using System;
+using static JVData_Struct;
+
+namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers.DataBridges
+{
+    public partial class DataBridgeFactory
+    {
+        public DataBridge NewDataBridgeCore(JVRecordSpec recordSpec)
+        {
+            var dummy = false;
+            if (dummy)
+            {
+                throw new NotImplementedException();
+            }
+<#
+var jvLinkToSQLiteJVDataBin = Path.Combine(new CsprojPathFinder().find__Urasandesu_JVLinkToSQLite_JVData(), @"bin");
+var columntts = new JVDataStructColumnTextTemplateFactory().NewAll(Path.Combine(jvLinkToSQLiteJVDataBin, "Urasandesu.JVLinkToSQLite.JVData.dll"));
+var columnttDict = new Dictionary<string, IEnumerable<JVDataStructColumnTextTemplate>>();
+foreach (var gj in columntts.GroupBy(_ => _.Id))
+{
+    if (JVDataStructTypes.IsJVDataStructTypeId(gj.Key))
+    {
+        columnttDict[gj.Key] = gj;
+    }
+}
+
+var dataBridgeFactoryttList = new List<DataBridgeFactoryTextTemplate>();
+foreach (var tuple in JVDataSpecFields.GetAll())
+{
+    var (fld, dataSpec) = tuple;
+    var value = dataSpec.Value;
+    var candidateRecordSpecs = dataSpec.CandidateRecordSpecs;
+    foreach (var candidateRecordSpec in candidateRecordSpecs)
+    {
+        var dataBridgeFactorytt = new DataBridgeFactoryTextTemplate(candidateRecordSpec, fld, dataSpec);
+        dataBridgeFactoryttList.Add(dataBridgeFactorytt);
+    }
+}
+
+foreach (var gj in dataBridgeFactoryttList.GroupBy(_ => _.Id))
+{
+    if (!columnttDict.TryGetValue(gj.Key, out var pgj)
+        && !columnttDict.TryGetValue(JVDataStructTypes.ExtractJVDataStructTypeId(gj.Key, withoutVersion: true), out pgj))
+    {
+        throw new InvalidOperationException($"Urasandesu.JVLinkToSQLite.Basis.dll と Urasandesu.JVLinkToSQLite.JVData.dll で不一致: {gj.Key}");
+    }
+#>
+            else if ((<#= string.Join(" || ", gj.Select(_ => _.GetDataSpecConditionElem())) #>) && <#= gj.First().GetRecordSpecConditionElem() #>)
+            {
+                return NewDataBridge((ref <#= pgj.First().JVDataStructType.Name #> dataStruct, ref string buf) => dataStruct.SetDataB(ref buf), new <#= pgj.First().JVDataStructType.Name #>DataBridge());
+            }
+<#
+}
+#>
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+    }
+}
+<#@ include file="PrimitiveTypeTextTemplate.t4" once="true"#>
+<#@ include file="JVDataStructTypes.t4" once="true"#>
+<#@ include file="JVDataStructColumnTextTemplate.t4" once="true"#>
+<#@ include file="JVDataStructColumnTextTemplateFactory.t4" once="true"#>
+<#@ include file="FieldIndex.t4" once="true"#>
+<#@ include file="CsprojPathFinder.t4" once="true"#>
+<#@ include file="JVDataSpecFields.t4" once="true"#>
+<#@ include file="DataBridgeFactoryTextTemplate.t4" once="true"#>

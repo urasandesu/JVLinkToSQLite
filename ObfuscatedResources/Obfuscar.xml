@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Obfuscator>
+  <Var name="InPath" value=".\Original" />
+  <Var name="OutPath" value="." />
+  <Module file="$(InPath)\ObfuscatedResources.dll" />
+</Obfuscator>  

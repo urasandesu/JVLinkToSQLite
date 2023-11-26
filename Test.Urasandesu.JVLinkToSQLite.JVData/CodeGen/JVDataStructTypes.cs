@@ -1,0 +1,255 @@
+﻿// JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQLite データベースに変換するツールです。
+// 
+// Copyright (C) 2023 Akira Sugiura
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// 
+// Additional permission under GNU GPL version 3 section 7
+// 
+// If you modify this Program, or any covered work, by linking or combining it with 
+// ObscUra (or a modified version of that library), containing parts covered 
+// by the terms of ObscUra's license, the licensors of this Program grant you 
+// additional permission to convey the resulting work.
+
+using Mono.Cecil;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Urasandesu.JVLinkToSQLite.Basis.Mixins.Mono.Cecil;
+using Urasandesu.JVLinkToSQLite.Basis.Mixins.System.Collections.Generic;
+
+internal static class JVDataStructTypes
+{
+    private static IReadOnlyList<TypeDefinition> List;
+    public static IReadOnlyList<TypeDefinition> GetList(string jvdataAssemblyPath)
+    {
+        if (List == null)
+        {
+            List = NewJVDataStructTypeList(jvdataAssemblyPath);
+        }
+        return List;
+    }
+
+    private static IReadOnlyList<TypeDefinition> NewJVDataStructTypeList(string jvdataAssemblyPath)
+    {
+        var jvDataStructTypes = new List<TypeDefinition>();
+        var jvDataStructNameSet = new HashSet<string>(new[]
+        {
+            "JV_TK_TOKUUMA",
+            "JV_RA_RACE",
+            "JV_SE_RACE_UMA",
+            "JV_HR_PAY",
+            "JV_H1_HYOSU_ZENKAKE",
+            "JV_H6_HYOSU_SANRENTAN",
+            "JV_O1_ODDS_TANFUKUWAKU",
+            "JV_O2_ODDS_UMAREN",
+            "JV_O3_ODDS_WIDE",
+            "JV_O4_ODDS_UMATAN",
+            "JV_O5_ODDS_SANREN",
+            "JV_O6_ODDS_SANRENTAN",
+            "JV_UM_UMA",
+            "JV_KS_KISYU",
+            "JV_CH_CHOKYOSI",
+            "JV_BR_BREEDER",
+            "JV_BN_BANUSI",
+            "JV_HN_HANSYOKU",
+            "JV_SK_SANKU",
+            "JV_RC_RECORD",
+            "JV_HC_HANRO",
+            "JV_WH_BATAIJYU",
+            "JV_WE_WEATHER",
+            "JV_AV_INFO",
+            "JV_JC_INFO",
+            "JV_TC_INFO",
+            "JV_CC_INFO",
+            "JV_DM_INFO",
+            "JV_YS_SCHEDULE",
+            "JV_HS_SALE",
+            "JV_HY_BAMEIORIGIN",
+            "JV_CK_CHAKU",
+            "JV_BT_KEITO",
+            "JV_CS_COURSE",
+            "JV_TM_INFO",
+            "JV_WF_INFO",
+            "JV_JG_JOGAIBA",
+            "JV_WC_WOOD",
+            "JV_UM_UMA_V4802",
+            "JV_BR_BREEDER_V4802",
+            "JV_HN_HANSYOKU_V4802",
+            "JV_SK_SANKU_V4802",
+            "JV_HS_SALE_V4802",
+            "JV_CK_CHAKU_V4802",
+            "JV_BT_KEITO_V4802"
+        });
+        var readerParam = new ReaderParameters() { AssemblyResolver = new MyAssemblyResolver(jvdataAssemblyPath), InMemory = true };
+        var t = AssemblyDefinition.ReadAssembly(jvdataAssemblyPath, readerParam).MainModule.GetType("JVData_Struct");
+        foreach (var nestedType in t.NestedTypes)
+        {
+            if (jvDataStructNameSet.Contains(nestedType.Name))
+            {
+                jvDataStructTypes.Add(nestedType);
+                if (nestedType.Name == "JV_O1_ODDS_TANFUKUWAKU")
+                {
+                    JV_O1_ODDS_TANFUKUWAKUTypeDef = nestedType;
+                }
+                else if (nestedType.Name == "JV_O2_ODDS_UMAREN")
+                {
+                    JV_O2_ODDS_UMARENTypeDef = nestedType;
+                }
+            }
+
+            if (nestedType.Name == "YMD")
+            {
+                YMDTypeDef = nestedType;
+            }
+            else if (nestedType.Name == "MDHM")
+            {
+                MDHMTypeDef = nestedType;
+            }
+            else if (nestedType.Name == "HM")
+            {
+                HMTypeDef = nestedType;
+            }
+        }
+        return jvDataStructTypes;
+    }
+
+    private class MyAssemblyResolver : BaseAssemblyResolver
+    {
+        private readonly DefaultAssemblyResolver _defaultResolver;
+        private readonly string _jvdataAssemblyPath;
+
+        public MyAssemblyResolver(string jvdataAssemblyPath)
+        {
+            _defaultResolver = new DefaultAssemblyResolver();
+            _jvdataAssemblyPath = jvdataAssemblyPath;
+        }
+
+        public override AssemblyDefinition Resolve(AssemblyNameReference name)
+        {
+            try
+            {
+                return _defaultResolver.Resolve(name);
+            }
+            catch (AssemblyResolutionException)
+            {
+                var readerParam = new ReaderParameters() { InMemory = true };
+                var myAsmBasePath = Path.Combine(Directory.GetParent(_jvdataAssemblyPath).FullName, name.Name);
+                {
+                    var myAsmPath = myAsmBasePath + ".dll";
+                    if (File.Exists(myAsmPath))
+                    {
+                        return AssemblyDefinition.ReadAssembly(myAsmPath, readerParam);
+                    }
+                }
+                {
+                    var myAsmPath = myAsmBasePath + ".exe";
+                    if (File.Exists(myAsmPath))
+                    {
+                        return AssemblyDefinition.ReadAssembly(myAsmPath, readerParam);
+                    }
+                }
+                throw;
+            }
+        }
+    }
+
+    public static readonly int JVDataStructTypeIdLength = 2;
+    private static readonly Regex JVDataStructTypeIdExtractionRegex = new Regex("^(?<id>.{2})(?<version>_V[0-9]+)?", RegexOptions.Compiled);
+    private static readonly Regex JVDataStructTypeIdTypeExtractionRegex1 = new Regex("^.{3}(?<id>.{2}).*(?<version>_V[0-9]+)$", RegexOptions.Compiled);
+    private static readonly Regex JVDataStructTypeIdTypeExtractionRegex2 = new Regex("^.{3}(?<id>.{2}).*$", RegexOptions.Compiled);
+    private static readonly Regex JVDataStructTypeChildIdExtractionRegex = new Regex("^(?<id>.{2})(?<version>_V[0-9]+)?_", RegexOptions.Compiled);
+    private static readonly Regex JVDataStructTypeIdRegex = new Regex("^.{2}(_V[0-9]+)?$", RegexOptions.Compiled);
+
+    public static TypeDefinition JV_O1_ODDS_TANFUKUWAKUTypeDef { get; private set; }
+    public static TypeDefinition JV_O2_ODDS_UMARENTypeDef { get; private set; }
+    public static TypeDefinition YMDTypeDef { get; private set; }
+    public static TypeDefinition MDHMTypeDef { get; private set; }
+    public static TypeDefinition HMTypeDef { get; private set; }
+
+    public static bool IsJVDataStructTypeId(string key)
+    {
+        return JVDataStructTypeIdRegex.IsMatch(key);
+    }
+
+    public static string ExtractJVDataStructTypeId(string key, bool withoutVersion = false)
+    {
+        {
+            var m = JVDataStructTypeIdExtractionRegex.Match(key);
+            if (m.Success)
+            {
+                return m.Groups["id"].Value + (withoutVersion ? string.Empty : m.Groups["version"].Value);
+            }
+        }
+        return null;
+    }
+
+    public static string ExtractJVDataStructTypeId(TypeReference jvDataStructType)
+    {
+        {
+            var m = JVDataStructTypeIdTypeExtractionRegex1.Match(jvDataStructType.Name);
+            if (m.Success)
+            {
+                return m.Groups["id"].Value + m.Groups["version"].Value;
+            }
+        }
+        {
+            var m = JVDataStructTypeIdTypeExtractionRegex2.Match(jvDataStructType.Name);
+            if (m.Success)
+            {
+                return m.Groups["id"].Value;
+            }
+        }
+        return null;
+    }
+
+    public static string ExtractJVDataStructTypeChildId(string key)
+    {
+        return JVDataStructTypeChildIdExtractionRegex.Replace(key, "");
+    }
+
+    public static bool HasConditionalColumnId(string key)
+    {
+        return key == ExtractJVDataStructTypeId(JV_O1_ODDS_TANFUKUWAKUTypeDef)
+            || key == ExtractJVDataStructTypeId(JV_O2_ODDS_UMARENTypeDef);
+    }
+
+    private static ReadOnlyHashSet<FullNameEquatableTypeReference> _combinableFieldsTypeSet;
+    private static ReadOnlyHashSet<FullNameEquatableTypeReference> CombinableFieldsTypeSet
+    {
+        get
+        {
+            if (_combinableFieldsTypeSet == null)
+            {
+                _combinableFieldsTypeSet = new ReadOnlyHashSet<FullNameEquatableTypeReference>(new[]
+                {
+                    YMDTypeDef,
+                    MDHMTypeDef,
+                    HMTypeDef
+                }.Select(_ => new FullNameEquatableTypeReference(_)));
+            }
+            return _combinableFieldsTypeSet;
+        }
+    }
+    public static bool HasCombinableFields(TypeReference typeRef)
+    {
+        return HasCombinableFields(new FullNameEquatableTypeReference(typeRef));
+    }
+
+    public static bool HasCombinableFields(FullNameEquatableTypeReference eqTypeRef)
+    {
+        return CombinableFieldsTypeSet.Contains(eqTypeRef);
+    }
+}
