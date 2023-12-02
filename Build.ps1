@@ -32,6 +32,9 @@ param (
     [string]
     $BuildTarget, 
 
+    [Switch]
+    $WithDocument, 
+
     [string]
     $AuthorId, 
 
@@ -58,16 +61,53 @@ try {
 try {
     nuget | Out-Null
 } catch [System.Management.Automation.CommandNotFoundException] {
-    Write-Error "このビルド スクリプトの実行には、予め NuGet コマンド ライン インターフェイス (CLI) をインストールしておく必要があります。"
-    exit 1452479952
+    Write-Error @"
+このビルド スクリプトの実行には、予め NuGet コマンド ライン インターフェイス (CLI) をインストールしておく必要があります。
+（Chocolatey を導入した上で、 ``> choco install nuget.commandline`` するのが簡単です）
+"@
+    exit 24777608
 }
 
 
 try {
     7z | Out-Null
 } catch [System.Management.Automation.CommandNotFoundException] {
-    Write-Error "このビルド スクリプトの実行には、予め 7-Zip をインストールしておく必要があります。"
-    exit 594712101
+    Write-Error @"
+このビルド スクリプトの実行には、予め 7-Zip をインストールしておく必要があります。
+（Chocolatey を導入した上で、 ``> choco install 7zip`` するのが簡単です）
+"@
+    exit 1982706211
+}
+
+
+if ($WithDocument) {
+    try {
+        npm | Out-Null
+    } catch [System.Management.Automation.CommandNotFoundException] {
+        Write-Error @"
+ドキュメントも併せてビルドするには、予め Node.js をインストールしておく必要があります。
+（Chocolatey を導入した上で、 ``> choco install nodejs`` するのが簡単です）
+"@
+        exit 1505259242
+    }
+
+    try {
+        wkhtmltopdf -V | Out-Null
+    } catch [System.Management.Automation.CommandNotFoundException] {
+        Write-Error @"
+ドキュメントも併せてビルドするには、予め wkhtmltopdf をインストールしておく必要があります。
+（Chocolatey を導入した上で、 ``> choco install wkhtmltopdf`` するのが簡単です）
+"@
+        exit 1348658072
+    }
+
+    $wiki = '.\JVLinkToSQLite.wiki'
+    if (!(Test-Path $wiki) -or !(0 -lt (dir $wiki '*.md').Length)) {
+        Write-Error @"
+ドキュメントも併せてビルドするには、予め JVLinkToSQLite.wiki のサブモジュールを git submodule update --remote -- "JVLinkToSQLite.wiki" しておく必要があります。
+"@
+        exit -148611199
+    }
 }
 
 
@@ -109,7 +149,15 @@ switch ($PsCmdlet.ParameterSetName) {
             Remove-Item $artifact -Force
         }
         if ('Clean' -ne $BuildTarget) {
-            7z a "-r" "-x!*.pdb" "-mmt" "-mx5" "-sfx" $artifact .\JVLinkToSQLite\bin\Release
+            $targetDir = ".\JVLinkToSQLite\bin\Release"
+            if ($WithDocument) {
+                $targetDirUri = New-Object uri (Resolve-Path $targetDir)
+                $wikiUri = New-Object uri (Resolve-Path $wiki)
+                $targetPath = Resolve-Path ([System.IO.Path]::Combine($targetDir, "JVLinkToSQLite.exe"))
+                $targetPathInfo = New-Object System.IO.FileInfo $targetPath
+                gwtc $wikiUri.AbsolutePath -f pdf -o $targetDirUri.AbsolutePath -n "JVLinkToSQLite_$($targetPathInfo.VersionInfo.FileVersion)" -t "JVLinkToSQLite v$($targetPathInfo.VersionInfo.FileVersion)" --toctitle "目次"
+            }
+            7z a "-r" "-x!*.pdb" "-mmt" "-mx5" "-sfx" $artifact $targetDir
             7z rn $artifact Release JVLinkToSQLiteArtifact
         }
     }
