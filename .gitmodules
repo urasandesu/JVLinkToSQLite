@@ -1,0 +1,3 @@
+[submodule "JVLinkToSQLite.wiki"]
+	path = JVLinkToSQLite.wiki
+	url = https://github.com/urasandesu/JVLinkToSQLite.wiki.git
