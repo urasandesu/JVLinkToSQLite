@@ -144,19 +144,20 @@ switch ($PsCmdlet.ParameterSetName) {
             }
         }
 
-        $artifact = ".\work\JVLinkToSQLiteArtifact.exe"
-        if ([System.IO.File]::Exists($artifact)) {
+        foreach ($artifact in (dir ".\work\JVLinkToSQLiteArtifact*.exe")) {
             Remove-Item $artifact -Force
         }
+
         if ('Clean' -ne $BuildTarget) {
             $targetDir = ".\JVLinkToSQLite\bin\Release"
+            $targetDirUri = New-Object uri (Resolve-Path $targetDir)
+            $wikiUri = New-Object uri (Resolve-Path $wiki)
+            $targetPath = Resolve-Path ([System.IO.Path]::Combine($targetDir, "JVLinkToSQLite.exe"))
+            $targetPathInfo = New-Object System.IO.FileInfo $targetPath
             if ($WithDocument) {
-                $targetDirUri = New-Object uri (Resolve-Path $targetDir)
-                $wikiUri = New-Object uri (Resolve-Path $wiki)
-                $targetPath = Resolve-Path ([System.IO.Path]::Combine($targetDir, "JVLinkToSQLite.exe"))
-                $targetPathInfo = New-Object System.IO.FileInfo $targetPath
                 gwtc $wikiUri.AbsolutePath -f pdf -o $targetDirUri.AbsolutePath -n "JVLinkToSQLite_$($targetPathInfo.VersionInfo.FileVersion)" -t "JVLinkToSQLite v$($targetPathInfo.VersionInfo.FileVersion)" --toctitle "目次"
             }
+            $artifact = ".\work\JVLinkToSQLiteArtifact_$($targetPathInfo.VersionInfo.FileVersion).exe"
             7z a "-r" "-x!*.pdb" "-mmt" "-mx5" "-sfx" $artifact $targetDir
             7z rn $artifact Release JVLinkToSQLiteArtifact
         }
