@@ -88,7 +88,7 @@ namespace Urasandesu.JVLinkToSQLite.Settings
                 }
                 {
                     var detail = new JVRealTimeDataUpdateSetting();
-                    detail.IsEnabled = true;
+                    detail.IsEnabled = false;
                     var dataSpecSettings = new[]
                     {
                         new JVDataSpecSetting("0B12", new JVKaisaiDateKey(DateTime.Today)),
