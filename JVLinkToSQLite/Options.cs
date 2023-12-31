@@ -43,7 +43,14 @@ namespace JVLinkToSQLite
         public string DataSource { get; set; }
 
         [Option('t', "throttlesize", Default = 100, HelpText =
-            "スロットル サイズ。SQLite へ書き込むまでに、JV-Data を何レコード分遅らせるかを指定します。")]
+            "スロットルサイズ。JVLinkToSQLiteは、JV-Dataのレコード読み取りと " + 
+            "SQLiteへの書き込みを非同期で行いますが、このパラメータはSQLite " + 
+            "へ書き込むまでに、JV-Dataを何レコード分遅らせるかを指定します。 " +
+            "書き込みを遅らせないほうがスループットもメモリ効率も良いのですが、 " + 
+            "開発中に何度か、サーバーへの単位時間当たりのアクセス頻度オーバーが " + 
+            "原因と考えられる、JV-Link側の不規則なエラーが発生したため、処理を " + 
+            "遅らせるようにしました。もし動作設定を変えていないのに不規則な " + 
+            "エラーが発生するようでしたら、この値を増やしてみてください。")]
         public int ThrottleSize { get; set; }
 
         [Option('s', "setting", Default = @"setting.xml", HelpText =
