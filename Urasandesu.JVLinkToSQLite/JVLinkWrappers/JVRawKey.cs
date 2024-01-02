@@ -27,16 +27,29 @@ using System.Collections.Generic;
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
+    /// <summary>
+    /// 生のキーを使用するデータ種別検索キーを表します。
+    /// </summary>
     public class JVRawKey : JVDataSpecKey
     {
+        /// <summary>
+        /// 空の生のキーを使用するデータ種別検索キーを初期化します。
+        /// </summary>
         public JVRawKey()
         { }
 
+        /// <summary>
+        /// 生のキーを指定して、生のキーを使用するデータ種別検索キーを初期化します。
+        /// </summary>
+        /// <param name="bstr">生のキー</param>
         public JVRawKey(string bstr)
         {
             BStr = bstr;
         }
 
+        /// <summary>
+        /// 生のキーを取得または設定します。
+        /// </summary>
         public string BStr { get; set; }
 
         public new JVRawKey Clone()

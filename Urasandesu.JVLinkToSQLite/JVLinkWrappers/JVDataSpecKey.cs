@@ -27,6 +27,9 @@ using System.Collections.Generic;
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
+    /// <summary>
+    /// データ種別検索キーを表す基底クラスです。
+    /// </summary>
     public abstract class JVDataSpecKey : ICloneable, IEquatable<JVDataSpecKey>
     {
         public virtual string GetKey()

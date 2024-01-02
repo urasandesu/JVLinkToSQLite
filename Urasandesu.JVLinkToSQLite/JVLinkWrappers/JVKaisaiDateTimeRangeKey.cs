@@ -27,18 +27,36 @@ using System.Collections.Generic;
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
+    /// <summary>
+    /// 開催日時範囲のデータ種別検索キーを表します。
+    /// </summary>
     public sealed class JVKaisaiDateTimeRangeKey : JVDataSpecKey, IIntervalDivisibleDataSpecKey
     {
+        /// <summary>
+        /// 空の開催日時範囲のデータ種別検索キーを初期化します。
+        /// </summary>
         public JVKaisaiDateTimeRangeKey()
         { }
 
+        /// <summary>
+        /// 開催日時開始ポイント、開催日時終了ポイントを指定して、開催日時範囲のデータ種別検索キーを初期化します。
+        /// </summary>
+        /// <param name="kaisaiDateTimeFrom">開催日時開始ポイント</param>
+        /// <param name="kaisaiDateTimeTo">開催日時終了ポイント</param>
         public JVKaisaiDateTimeRangeKey(DateTime kaisaiDateTimeFrom, DateTime kaisaiDateTimeTo)
         {
             KaisaiDateTimeFrom = kaisaiDateTimeFrom;
             KaisaiDateTimeTo = kaisaiDateTimeTo;
         }
 
+        /// <summary>
+        /// 開催日時開始ポイントを取得または設定します。
+        /// </summary>
         public DateTime KaisaiDateTimeFrom { get; set; }
+
+        /// <summary>
+        /// 開催日時終了ポイントを取得または設定します。
+        /// </summary>
         public DateTime KaisaiDateTimeTo { get; set; }
 
         DateTime IIntervalDivisibleDataSpecKey.DateTimeFrom => KaisaiDateTimeFrom;
