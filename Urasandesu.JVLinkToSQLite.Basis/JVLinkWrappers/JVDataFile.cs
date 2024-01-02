@@ -28,6 +28,9 @@ using System.Diagnostics;
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
+    /// <summary>
+    /// JV-Data として提供されるデータ ファイルを表します。
+    /// </summary>
     [DebuggerDisplay("{" + nameof(DataFileSpec) + "." + nameof(JVDataFileSpec.Value) + "}, " + nameof(FileName) + "={" + nameof(FileName) + "}, " + nameof(DatetimeKey) + "={" + nameof(DatetimeKey) + "}, " + nameof(PublishedDateTime) + "={" + nameof(PublishedDateTime) + "}")]
     public class JVDataFile : IEquatable<JVDataFile>
     {
@@ -39,10 +42,28 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
             PublishedDateTime = publishedDateTime;
         }
 
+        /// <summary>
+        /// データ ファイルの仕様を取得します。
+        /// </summary>
         public JVDataFileSpec DataFileSpec { get; private set; }
+
+        /// <summary>
+        /// データ ファイルのファイル名を取得します。
+        /// </summary>
         public string FileName { get; private set; }
+
+        /// <summary>
+        /// データ ファイルの日時キーを取得します。
+        /// </summary>
         public string DatetimeKey { get; private set; }
-        public DateTime PublishedDateTime { get; set; }
+
+        /// <summary>
+        /// データ ファイルの公開日時を取得します。
+        /// </summary>
+        /// <remarks>
+        /// <see cref="DatetimeKey"/> を <see cref="DateTime"/> 型に変換したものです。
+        /// </remarks>
+        public DateTime PublishedDateTime { get; private set; }
 
         public override bool Equals(object obj)
         {

@@ -29,9 +29,19 @@ using Urasandesu.JVLinkToSQLite.OperatorAggregates;
 
 namespace Urasandesu.JVLinkToSQLite.Settings
 {
+    /// <summary>
+    /// 動作設定詳細を表す基底クラスです。
+    /// </summary>
     public abstract class JVLinkToSQLiteDetailSetting
     {
+        /// <summary>
+        /// 動作設定詳細が有効かどうかを取得または設定します。
+        /// </summary>
         public bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public JVDataSpecSetting[] DataSpecSettings { get; set; }
         [XmlIgnore]

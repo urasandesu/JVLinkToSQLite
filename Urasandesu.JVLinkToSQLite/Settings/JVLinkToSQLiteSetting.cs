@@ -29,8 +29,14 @@ using Urasandesu.JVLinkToSQLite.JVLinkWrappers;
 
 namespace Urasandesu.JVLinkToSQLite.Settings
 {
+    /// <summary>
+    /// 動作設定を表します。
+    /// </summary>
     public class JVLinkToSQLiteSetting
     {
+        /// <summary>
+        /// デフォルトの動作設定を取得します。
+        /// </summary>
         public static JVLinkToSQLiteSetting Default
         {
             get
@@ -123,12 +129,18 @@ namespace Urasandesu.JVLinkToSQLite.Settings
             }
         }
 
+        /// <summary>
+        /// 動作設定詳細のリストを取得または設定します。
+        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         [XmlArrayItem(typeof(JVNormalUpdateSetting))]
         [XmlArrayItem(typeof(JVSetupDataUpdateSetting))]
         [XmlArrayItem(typeof(JVRealTimeDataUpdateSetting))]
         public JVLinkToSQLiteDetailSetting[] Details { get; set; }
 
+        /// <summary>
+        /// SQLite データベースの接続情報を取得します。
+        /// </summary>
         [XmlIgnore]
         public SQLiteConnectionInfo SQLiteConnectionInfo { get; private set; }
 

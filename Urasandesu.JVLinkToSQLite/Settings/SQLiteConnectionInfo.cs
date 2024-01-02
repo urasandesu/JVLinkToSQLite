@@ -24,19 +24,38 @@
 
 namespace Urasandesu.JVLinkToSQLite.Settings
 {
+    /// <summary>
+    /// SQLite データベース接続情報を表します。
+    /// </summary>
     public class SQLiteConnectionInfo
     {
+        /// <summary>
+        /// SQLite データベースのファイル パスを指定して、クラスの新しいインスタンスを初期化します。
+        /// </summary>
+        /// <param name="dataSource">SQLite データベースのファイル パス</param>
         public SQLiteConnectionInfo(string dataSource) :
             this(dataSource, 0)
         { }
 
+        /// <summary>
+        /// SQLite データベースのファイル パスと、スロットルサイズを指定して、クラスの新しいインスタンスを初期化します。
+        /// </summary>
+        /// <param name="dataSource">SQLite データベースのファイル パス</param>
+        /// <param name="throttleSize">スロットルサイズ</param>
         public SQLiteConnectionInfo(string dataSource, int throttleSize)
         {
             DataSource = dataSource;
             ThrottleSize = throttleSize;
         }
 
+        /// <summary>
+        /// SQLite データベースのファイル パスを取得します。
+        /// </summary>
         public string DataSource { get; }
+
+        /// <summary>
+        /// スロットルサイズを取得します。
+        /// </summary>
         public int ThrottleSize { get; }
     }
 }

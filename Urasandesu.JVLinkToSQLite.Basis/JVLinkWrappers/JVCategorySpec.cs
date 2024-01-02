@@ -29,10 +29,10 @@ using System.Diagnostics;
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
     /// <summary>
-    /// 区分 ID を表します。
+    /// 区分を表します。
     /// </summary>
     /// <remarks>
-    /// JRA-VAN Data Lab. SDK に同梱のドキュメント：「蓄積系提供データ一覧.xls」のシート[提供データ一覧]にある「区分 ID」を表します。
+    /// JRA-VAN Data Lab. SDK に同梱のドキュメント：「蓄積系提供データ一覧.xls」のシート[提供データ一覧]にある「区分 ID」に関わる情報を表します。
     /// </remarks>
     [DebuggerDisplay("{" + nameof(Value) + "}")]
     public class JVCategorySpec : IEquatable<JVCategorySpec>
@@ -152,6 +152,9 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
         {
         }
 
+        /// <summary>
+        /// 区分の ID を取得します。
+        /// </summary>
         public string Value { get; private set; }
 
         public override bool Equals(object obj)

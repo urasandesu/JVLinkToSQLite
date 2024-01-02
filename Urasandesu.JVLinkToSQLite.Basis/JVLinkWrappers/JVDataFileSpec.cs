@@ -31,6 +31,9 @@ using static Urasandesu.JVLinkToSQLite.JVLinkWrappers.JVRecordSpec;
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
+    /// <summary>
+    /// JV-Data として提供されるデータ ファイル仕様を表します。
+    /// </summary>
     [DebuggerDisplay("{" + nameof(Value) + "}, " +
                      nameof(RecordSpec) + "={" + nameof(RecordSpec) + "}, " +
                      nameof(CategorySpec) + "={" + nameof(CategorySpec) + "}, " +
@@ -242,11 +245,34 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
         {
         }
 
+        /// <summary>
+        /// データ ファイル仕様の ID を取得します。
+        /// </summary>
         public string Value { get; private set; }
+
+        /// <summary>
+        /// レコード種別を取得します。
+        /// </summary>
         public JVRecordSpec RecordSpec { get; private set; }
+
+        /// <summary>
+        /// 区分を取得します。
+        /// </summary>
         public JVCategorySpec CategorySpec { get; private set; }
+
+        /// <summary>
+        /// 保存を取得します。
+        /// </summary>
         public JVSaveSpec SaveSpec { get; private set; }
+
+        /// <summary>
+        /// データ ファイルの名前にマッチする正規表現を取得します。
+        /// </summary>
         public Regex FileNameRegex { get; private set; }
+
+        /// <summary>
+        /// データ ファイルの提供期間を取得します。
+        /// </summary>
         public TimeSpan ProvidedDuration { get; private set; }
 
         public override bool Equals(object obj)

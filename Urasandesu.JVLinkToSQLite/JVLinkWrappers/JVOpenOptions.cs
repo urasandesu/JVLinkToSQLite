@@ -24,12 +24,33 @@
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
+    /// <summary>
+    /// 取得方法種別を表します。
+    /// </summary>
+    /// <remarks>
+    /// JVOpen の option 引数に指定する値をベースに、現在のデータの元となった JV-Link の取得方法種別を表します。
+    /// </remarks>
     public enum JVOpenOptions
     {
+        /// <summary>
+        /// 未指定。
+        /// </summary>
         None = 0,
+        /// <summary>
+        /// 通常データ。JVOpen を option=0 で呼び出して取得したデータです。
+        /// </summary>
         Normal = 1,
+        /// <summary>
+        /// セットアップデータ。JVOpen を option=3 で呼び出して取得したデータです。
+        /// </summary>
         SetupData = 3,
+        /// <summary>
+        /// ダイアログ無しセットアップデータ。JVOpen を option=4 で呼び出して取得したデータです。
+        /// </summary>
         SetupDataNoDialog = 4,
+        /// <summary>
+        /// 速報系データ。JVRTOpen を呼び出して取得したデータです。
+        /// </summary>
         RealTime = 9
     }
 }

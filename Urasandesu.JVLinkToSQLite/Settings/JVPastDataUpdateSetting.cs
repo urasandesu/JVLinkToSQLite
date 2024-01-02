@@ -28,8 +28,14 @@ using Urasandesu.JVLinkToSQLite.OperatorAggregates;
 
 namespace Urasandesu.JVLinkToSQLite.Settings
 {
+    /// <summary>
+    /// 動作設定詳細の内、過去データ更新を表す基底クラスです。
+    /// </summary>
     public abstract class JVPastDataUpdateSetting : JVLinkToSQLiteDetailSetting
     {
+        /// <summary>
+        /// 取得方法種別を取得または設定します。
+        /// </summary>
         public JVOpenOptions OpenOption { get; set; }
 
         public override JVOperatorAggregate NewOperatorAggregate(IResolver resolver, bool isImmediate)

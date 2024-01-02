@@ -28,6 +28,9 @@ using System.Diagnostics;
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
+    /// <summary>
+    /// レコード種別を表します。
+    /// </summary>
     [DebuggerDisplay("{" + nameof(Value) + "}")]
     public class JVRecordSpec : IEquatable<JVRecordSpec>
     {
@@ -133,7 +136,15 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
         }
 
         private JVRecordSpec() { }
+
+        /// <summary>
+        /// レコード種別の ID を取得します。
+        /// </summary>
         public string Value { get; private set; }
+
+        /// <summary>
+        /// レコード種別のデータ長をバイト単位で取得します。
+        /// </summary>
         public int LengthInByte { get; private set; }
 
         public override bool Equals(object obj)
