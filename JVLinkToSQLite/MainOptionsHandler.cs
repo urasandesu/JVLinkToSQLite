@@ -25,6 +25,7 @@
 using CommandLine;
 using CommandLine.Text;
 using DryIoc;
+using JVLinkToSQLite.Mixins.CommandLine;
 using System;
 using System.Diagnostics;
 using System.Reflection;
@@ -35,50 +36,23 @@ using static Urasandesu.JVLinkToSQLite.JVOperationMessenger;
 
 namespace JVLinkToSQLite
 {
-    internal class ProgramArgsHandler
+    internal class MainOptionsHandler : OptionsHandler<MainOptions>
     {
-        private readonly ParserResult<Options> _parserResult;
+        private readonly ParserResult<object> _parserResult;
 
-        public ProgramArgsHandler(ParserResult<Options> parserResult)
+        public MainOptionsHandler(ParserResult<object> parserResult)
         {
             _parserResult = parserResult;
         }
 
-        private static string MessageForArgument(object[] args) => $"Argument {args[0]}: {args[1]}";
-        private static string MessageForException(object[] args) => $"例外が発生しました。例外：{args[0]}";
         private static string MessageForWarningCanContinue(object[] args) =>
             $"エラーが発生しましたが、可能な限り続行します。最初のエラー (引数) [場所]：{args[0]} ({StringMixin.JoinIfAvailable(", ", args[1])}) [{args[2]}#L{args[3]}]";
 
-        public int Main(Options options)
-        {
-            if (TryProcessByUninvocableOption(options, out var returnCode))
-            {
-                return returnCode;
-            }
-
-            ShowShortNotice();
-
-            var listener = new ConsoleListener((ListeningLevels)options.LogLevel);
-            InfoStart(listener, typeof(Program), args => "JVLinkToSQLite");
-            var stopwatch = Stopwatch.StartNew();
-            try
-            {
-                var ret = ProcessByInvocableOption(listener, options);
-                InfoEnd(listener, typeof(Program), args => $"JVLinkToSQLite {args[0]}s", stopwatch.Elapsed.TotalSeconds);
-                return ret;
-            }
-            catch (Exception ex)
-            {
-                Error(listener, typeof(Program), MessageForException, ex);
-                return (int)ReturnCodes.Error;
-            }
-        }
-
-        private bool TryProcessByUninvocableOption(Options options, out int returnCode)
+        protected override bool TryProcessByUninvocableOption(MainOptions options, out int returnCode)
         {
             if (options.Mode == Modes.None)
             {
-                var helpText = HelpText.AutoBuild(_parserResult, _ => _, _ => _);
+                var helpText = HelpText.AutoBuild(_parserResult, _ => _, _ => _, maxDisplayWidth: ParserSettingsMixin.MaximumDisplayWidth);
                 Console.WriteLine(helpText);
                 returnCode = (int)ReturnCodes.OptionNotParsed;
                 return true;
@@ -92,14 +66,14 @@ namespace JVLinkToSQLite
             return false;
         }
 
-        private static int ProcessByInvocableOption(IJVServiceOperationListener listener, Options options)
+        protected override int ProcessByInvocableOption(IJVServiceOperationListener listener, MainOptions options)
         {
-            Verbose(listener, typeof(Program), MessageForArgument, nameof(Options.Mode), options.Mode);
-            Verbose(listener, typeof(Program), MessageForArgument, nameof(Options.DataSource), options.DataSource);
-            Verbose(listener, typeof(Program), MessageForArgument, nameof(Options.ThrottleSize), options.ThrottleSize);
-            Verbose(listener, typeof(Program), MessageForArgument, nameof(Options.Setting), options.Setting);
-            Verbose(listener, typeof(Program), MessageForArgument, nameof(Options.LogLevel), options.LogLevel);
-            Verbose(listener, typeof(Program), MessageForArgument, nameof(Options.SkipsLastModifiedUpdate), options.SkipsLastModifiedUpdate);
+            Verbose(listener, this, MessageForArgument, nameof(MainOptions.Mode), options.Mode);
+            Verbose(listener, this, MessageForArgument, nameof(MainOptions.DataSource), options.DataSource);
+            Verbose(listener, this, MessageForArgument, nameof(MainOptions.ThrottleSize), options.ThrottleSize);
+            Verbose(listener, this, MessageForArgument, nameof(MainOptions.Setting), options.Setting);
+            Verbose(listener, this, MessageForArgument, nameof(MainOptions.LogLevel), options.LogLevel);
+            Verbose(listener, this, MessageForArgument, nameof(MainOptions.SkipsLastModifiedUpdate), options.SkipsLastModifiedUpdate);
 
             using (var container = JVLinkToSQLiteDependency.NewDefaultContainer(listener))
             using (var childContainer = container.CreateChild())
@@ -137,23 +111,15 @@ JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQ
             return (int)ReturnCodes.Success;
         }
 
-        private static void ShowShortNotice()
-        {
-            Console.WriteLine($@"
-JVLinkToSQLite バージョン {Assembly.GetEntryAssembly().GetName().Version}, Copyright (C) 2023 Akira Sugiura
-JVLinkToSQLite は **全くの無保証** で提供されます。また、これはフリー ソフトウェアであり、ある条件の下で再頒布することが奨励されています。詳しくは「JVLinkToSQLite -m about」とタイプして下さい。
-");
-        }
-
         private static int Initialize(IResolver resolver)
         {
             var listener = resolver.Resolve<IJVServiceOperationListener>();
-            InfoStart(listener, typeof(Program), args => "JVLinkToSQLite 初期化モード");
+            InfoStart(listener, typeof(MainOptionsHandler), args => "JVLinkToSQLite 初期化モード");
             var stopwatch = Stopwatch.StartNew();
 
             var retCode = InitializeCore(resolver, listener);
 
-            InfoEnd(listener, typeof(Program), args => $"JVLinkToSQLite 初期化モード {args[0]}s", stopwatch.Elapsed.TotalSeconds);
+            InfoEnd(listener, typeof(MainOptionsHandler), args => $"JVLinkToSQLite 初期化モード {args[0]}s", stopwatch.Elapsed.TotalSeconds);
             return retCode;
         }
 
@@ -164,7 +130,7 @@ JVLinkToSQLite は **全くの無保証** で提供されます。また、こ�
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ThreadException += (sender, e) =>
             {
-                Error(listener, typeof(Program), MessageForException, e.Exception);
+                Error(listener, typeof(MainOptionsHandler), MessageForException, e.Exception);
                 retCode = ReturnCodes.Error;
             };
             using (var setupForm = resolver.Resolve<SetupForm>())
@@ -174,19 +140,19 @@ JVLinkToSQLite は **全くの無保証** で提供されます。また、こ�
             return (int)retCode;
         }
 
-        private static int CreateDefaultSetting(IResolver resolver, Options options)
+        private static int CreateDefaultSetting(IResolver resolver, MainOptions options)
         {
             var listener = resolver.Resolve<IJVServiceOperationListener>();
-            InfoStart(listener, typeof(Program), args => "JVLinkToSQLite デフォルト設定生成モード");
+            InfoStart(listener, typeof(MainOptionsHandler), args => "JVLinkToSQLite デフォルト設定生成モード");
             var stopwatch = Stopwatch.StartNew();
 
             var retCode = CreateDefaultSettingCore(resolver, options);
 
-            InfoEnd(listener, typeof(Program), args => $"JVLinkToSQLite デフォルト設定生成モード {args[0]}s", stopwatch.Elapsed.TotalSeconds);
+            InfoEnd(listener, typeof(MainOptionsHandler), args => $"JVLinkToSQLite デフォルト設定生成モード {args[0]}s", stopwatch.Elapsed.TotalSeconds);
             return retCode;
         }
 
-        private static int CreateDefaultSettingCore(IResolver resolver, Options options)
+        private static int CreateDefaultSettingCore(IResolver resolver, MainOptions options)
         {
             var bootstrap = resolver.Resolve<JVLinkToSQLiteBootstrap>();
             var xss = resolver.Resolve<IXmlSerializationService>();
@@ -208,19 +174,19 @@ JVLinkToSQLite は **全くの無保証** で提供されます。また、こ�
             return (int)ReturnCodes.Success;
         }
 
-        private static int WatchEvent(IResolver resolver, Options options)
+        private static int WatchEvent(IResolver resolver, MainOptions options)
         {
             var listener = resolver.Resolve<IJVServiceOperationListener>();
-            InfoStart(listener, typeof(Program), args => "JVLinkToSQLite イベント待ちモード");
+            InfoStart(listener, typeof(MainOptionsHandler), args => "JVLinkToSQLite イベント待ちモード");
             var stopwatch = Stopwatch.StartNew();
 
             var retCode = WatchEventCore(resolver, listener, options);
 
-            InfoEnd(listener, typeof(Program), args => $"JVLinkToSQLite イベント待ちモード {args[0]}s", stopwatch.Elapsed.TotalSeconds);
+            InfoEnd(listener, typeof(MainOptionsHandler), args => $"JVLinkToSQLite イベント待ちモード {args[0]}s", stopwatch.Elapsed.TotalSeconds);
             return retCode;
         }
 
-        private static int WatchEventCore(IResolver resolver, IJVServiceOperationListener listener, Options options)
+        private static int WatchEventCore(IResolver resolver, IJVServiceOperationListener listener, MainOptions options)
         {
             var retCode = ReturnCodes.Success;
             var bootstrap = resolver.Resolve<JVLinkToSQLiteBootstrap>();
@@ -233,7 +199,7 @@ JVLinkToSQLite は **全くの無保証** で提供されます。また、こ�
                 {
                     retCode = ReturnCodes.Warning;
                     Warning(listener,
-                            typeof(Program),
+                            typeof(MainOptionsHandler),
                             MessageForWarningCanContinue,
                             rsltAgg.FirstDebugMessage,
                             rsltAgg.FirstArguments,
@@ -245,19 +211,19 @@ JVLinkToSQLite は **全くの無保証** で提供されます。また、こ�
             return (int)retCode;
         }
 
-        private static int Execute(IResolver resolver, Options options)
+        private static int Execute(IResolver resolver, MainOptions options)
         {
             var listener = resolver.Resolve<IJVServiceOperationListener>();
-            InfoStart(listener, typeof(Program), args => "JVLinkToSQLite 実行モード");
+            InfoStart(listener, typeof(MainOptionsHandler), args => "JVLinkToSQLite 実行モード");
             var stopwatch = Stopwatch.StartNew();
 
             var retCode = ExecuteCore(resolver, listener, options);
 
-            InfoEnd(listener, typeof(Program), args => $"JVLinkToSQLite 実行モード {args[0]}s", stopwatch.Elapsed.TotalSeconds);
+            InfoEnd(listener, typeof(MainOptionsHandler), args => $"JVLinkToSQLite 実行モード {args[0]}s", stopwatch.Elapsed.TotalSeconds);
             return retCode;
         }
 
-        private static int ExecuteCore(IResolver resolver, IJVServiceOperationListener listener, Options options)
+        private static int ExecuteCore(IResolver resolver, IJVServiceOperationListener listener, MainOptions options)
         {
             var retCode = ReturnCodes.Success;
             var bootstrap = resolver.Resolve<JVLinkToSQLiteBootstrap>();
@@ -270,7 +236,7 @@ JVLinkToSQLite は **全くの無保証** で提供されます。また、こ�
                 {
                     retCode = ReturnCodes.Warning;
                     Warning(listener,
-                            typeof(Program),
+                            typeof(MainOptionsHandler),
                             MessageForWarningCanContinue,
                             rsltAgg.FirstDebugMessage,
                             rsltAgg.FirstArguments,

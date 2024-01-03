@@ -22,30 +22,10 @@
 // by the terms of ObscUra's license, the licensors of this Program grant you 
 // additional permission to convey the resulting work.
 
-using CommandLine;
-using JVLinkToSQLite.Mixins.CommandLine;
-using System;
-
-namespace JVLinkToSQLite
+namespace JVLinkToSQLite.Mixins.CommandLine
 {
-    internal static class Program
+    public class ParserSettingsMixin
     {
-        [STAThread]
-        private static int Main(string[] args)
-        {
-            using (var parser = new Parser(with =>
-            {
-                with.CaseInsensitiveEnumValues = true;
-                with.HelpWriter = Console.Out;
-                with.MaximumDisplayWidth = ParserSettingsMixin.MaximumDisplayWidth;
-            }))
-            {
-                var parserResult = parser.ParseArguments<MainOptions, SettingOptions>(args);
-                return parserResult.MapResult<MainOptions, SettingOptions, int>(
-                    new MainOptionsHandler(parserResult).Main, 
-                    new SettingOptionsHandler(parserResult).Main, 
-                    errors => (int)ReturnCodes.OptionNotParsed);
-            }
-        }
+        public static readonly int MaximumDisplayWidth = 80;
     }
 }

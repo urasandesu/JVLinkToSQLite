@@ -23,29 +23,26 @@
 // additional permission to convey the resulting work.
 
 using CommandLine;
-using JVLinkToSQLite.Mixins.CommandLine;
-using System;
 
 namespace JVLinkToSQLite
 {
-    internal static class Program
+    [Verb("setting", HelpText = "動作設定処理")]
+    internal class SettingOptions : Options
     {
-        [STAThread]
-        private static int Main(string[] args)
-        {
-            using (var parser = new Parser(with =>
-            {
-                with.CaseInsensitiveEnumValues = true;
-                with.HelpWriter = Console.Out;
-                with.MaximumDisplayWidth = ParserSettingsMixin.MaximumDisplayWidth;
-            }))
-            {
-                var parserResult = parser.ParseArguments<MainOptions, SettingOptions>(args);
-                return parserResult.MapResult<MainOptions, SettingOptions, int>(
-                    new MainOptionsHandler(parserResult).Main, 
-                    new SettingOptionsHandler(parserResult).Main, 
-                    errors => (int)ReturnCodes.OptionNotParsed);
-            }
-        }
+        [Option('s', "setting", Default = @"setting.xml", HelpText =
+            "動作設定。設定を変更する XML ファイルのパスを指定します。")]
+        public string Setting { get; set; }
+
+        [Option('x', "xpath", Required = true, HelpText =
+            "変更先を指定する XPath。対象のノードが複数存在する場合は、全て同じ値に書き換えられます。")]
+        public string XPath { get; set; }
+
+        [Option('v', "value", Required = true, HelpText =
+            "変更後の値。")]
+        public string Value { get; set; }
+
+        [Option('f', "force", Default = false, HelpText =
+            "変更時の確認メッセージを表示するかどうか。")]
+        public bool Force { get; set; }
     }
 }
