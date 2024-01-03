@@ -27,6 +27,9 @@ using Urasandesu.JVLinkToSQLite.OperatorAggregates;
 
 namespace Urasandesu.JVLinkToSQLite.Settings
 {
+    /// <summary>
+    /// 速報系データ更新を表す動作設定詳細です。
+    /// </summary>
     public class JVRealTimeDataUpdateSetting : JVLinkToSQLiteDetailSetting
     {
         public override JVOperatorAggregate NewOperatorAggregate(IResolver resolver, bool isImmediate)

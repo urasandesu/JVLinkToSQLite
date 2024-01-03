@@ -34,6 +34,9 @@ using static Urasandesu.JVLinkToSQLite.JVLinkWrappers.JVRecordSpec;
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
+    /// <summary>
+    /// データ種別を表します。
+    /// </summary>
     [DebuggerDisplay("{" + nameof(Value) + "}")]
     public class JVDataSpec : IEquatable<JVDataSpec>
     {
@@ -138,14 +141,47 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 
         private JVDataSpec() { }
 
+        /// <summary>
+        /// データ種別の ID を取得します。
+        /// </summary>
         public string Value { get; private set; }
+
+        /// <summary>
+        /// 即時実行可能かどうかを取得します。
+        /// </summary>
         public bool IsImmediatelyExecutable { get; private set; }
+
+        /// <summary>
+        /// イベントを監視できるかどうかを取得します。
+        /// </summary>
         public bool CanWatchEvent { get; private set; }
+
+        /// <summary>
+        /// 最大データ長をバイト単位で取得します。
+        /// </summary>
         public int MaxLengthInByte { get; private set; }
+
+        /// <summary>
+        /// このデータ種別に含めることが可能なレコード種別のリストを取得します。
+        /// </summary>
         public ReadOnlyHashSet<JVRecordSpec> CandidateRecordSpecs { get; private set; }
+
+        /// <summary>
+        /// このデータ種別の最新バージョンを取得します。
+        /// </summary>
+        /// <remarks>
+        /// このプロパティは、同じデータ種別に、過去のある時点のバージョンにおいて、現在とは別のデータ種別 ID が割り振られていた場合にのみ設定されます。
+        /// それ以外の場合、null になります。\n
+        /// \n
+        /// ・「蓄積系ソフト用　蓄積情報」は、JV-Data V4.8.0.2 の時はデータ種別 ID=DIFF だったが、V4.9.0 以降はデータ種別 ID=DIFN に変更された\n
+        /// ⇒ この場合、このプロパティは、DIFF を表すオブジェクトでは EmbeddableVersion(4, 8, 0, 2) に、DIFN を表すオブジェクトでは null になる
+        /// </remarks>
         public EmbeddableVersion LatestVersion { get; private set; }
+
+        /// <summary>
+        /// このデータ種別に含まれるデータ ファイル仕様のリストを取得します。
+        /// </summary>
         public IReadOnlyList<JVDataFileSpec> DataFileSpecs { get; private set; }
-        public bool CanSkip { get => DataFileSpecs != null; }
 
         public override bool Equals(object obj)
         {

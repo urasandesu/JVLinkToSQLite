@@ -27,16 +27,29 @@ using System.Collections.Generic;
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
+    /// <summary>
+    /// 開催日単位のデータ種別検索キーを表します。
+    /// </summary>
     public class JVKaisaiDateKey : JVDataSpecKey
     {
+        /// <summary>
+        /// 空の開催日単位のデータ種別検索キーを初期化します。
+        /// </summary>
         public JVKaisaiDateKey()
         { }
 
+        /// <summary>
+        /// 開催日を指定して、開催日単位のデータ種別検索キーを初期化します。
+        /// </summary>
+        /// <param name="kaisaiDate">開催日。時分秒以下の情報も保持できますが、検索キーとして使用する時には切り捨てられます。</param>
         public JVKaisaiDateKey(DateTime kaisaiDate)
         {
             KaisaiDate = kaisaiDate;
         }
 
+        /// <summary>
+        /// 開催日を取得もしくは設定します。
+        /// </summary>
         public DateTime KaisaiDate { get; set; }
 
         public new JVKaisaiDateKey Clone()

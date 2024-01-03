@@ -27,11 +27,25 @@ using System.Collections.Generic;
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
+    /// <summary>
+    /// レース毎のデータ種別検索キーを表します。
+    /// </summary>
     public class JVRaceKey : JVDataSpecKey
     {
+        /// <summary>
+        /// 空のレース毎のデータ種別検索キーを初期化します。
+        /// </summary>
         public JVRaceKey()
         { }
 
+        /// <summary>
+        /// 開催日時、場コード、回次、日次、レース番号を指定して、レース毎のデータ種別検索キーを初期化します。
+        /// </summary>
+        /// <param name="kaisaiDate">開催日時</param>
+        /// <param name="jyoCD">場コード</param>
+        /// <param name="kaiji">回次</param>
+        /// <param name="nichiji">日次</param>
+        /// <param name="raceNum">レース番号</param>
         public JVRaceKey(DateTime kaisaiDate, string jyoCD, string kaiji, string nichiji, string raceNum)
         {
             KaisaiDate = kaisaiDate;
@@ -41,10 +55,29 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
             RaceNum = raceNum;
         }
 
+        /// <summary>
+        /// 開催日時を取得または設定します。
+        /// </summary>
         public DateTime KaisaiDate { get; set; }
+
+        /// <summary>
+        /// 場コードを取得または設定します。
+        /// </summary>
         public string JyoCD { get; set; }
+
+        /// <summary>
+        /// 回次を取得または設定します。
+        /// </summary>
         public string Kaiji { get; set; }
+
+        /// <summary>
+        /// 日次を取得または設定します。
+        /// </summary>
         public string Nichiji { get; set; }
+
+        /// <summary>
+        /// レース番号を取得または設定します。
+        /// </summary>
         public string RaceNum { get; set; }
 
         public new JVRaceKey Clone()

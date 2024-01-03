@@ -28,15 +28,32 @@ using System.Diagnostics;
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers
 {
+    /// <summary>
+    /// 保存を表します。
+    /// </summary>
+    /// <remarks>
+    /// JRA-VAN Data Lab. SDK に同梱のドキュメント：「蓄積系提供データ一覧.xls」のシート[提供データ一覧]にある「保存 ID」に関わる情報を表します。
+    /// </remarks>
     [DebuggerDisplay("{" + nameof(Value) + "}")]
     public class JVSaveSpec : IEquatable<JVSaveSpec>
     {
+        /// <summary>
+        /// 主に週次で更新されるデータを表します。
+        /// </summary>
         public static readonly JVSaveSpec W = new JVSaveSpec() { Value = nameof(W) };
+
+        /// <summary>
+        /// 主に月次で更新されるデータを表します。
+        /// </summary>
         public static readonly JVSaveSpec M = new JVSaveSpec() { Value = nameof(M) };
 
         private JVSaveSpec()
         {
         }
+
+        /// <summary>
+        /// 保存の ID を取得します。
+        /// </summary>
         public string Value { get; private set; }
 
         public override bool Equals(object obj)

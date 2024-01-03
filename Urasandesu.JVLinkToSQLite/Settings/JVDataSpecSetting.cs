@@ -31,28 +31,61 @@ using Urasandesu.JVLinkToSQLite.JVLinkWrappers;
 
 namespace Urasandesu.JVLinkToSQLite.Settings
 {
+    /// <summary>
+    /// データ種別に関する動作設定を表します。
+    /// </summary>
     public class JVDataSpecSetting : ICloneable
     {
+        /// <summary>
+        /// 空のデータ種別に関する動作設定を初期化します。
+        /// </summary>
         public JVDataSpecSetting()
         {
         }
 
+        /// <summary>
+        /// データ種別 ID を指定して、データ種別に関する動作設定を初期化します。
+        /// </summary>
+        /// <param name="dataSpec">データ種別 ID</param>
         public JVDataSpecSetting(string dataSpec) :
             this(dataSpec, new JVKaisaiDateTimeKey(new DateTime(1986, 01, 01)))
         { }
 
+        /// <summary>
+        /// データ種別 ID とデータ種別検索キーを指定して、データ種別に関する動作設定を初期化します。
+        /// </summary>
+        /// <param name="dataSpec">データ種別 ID</param>
+        /// <param name="dataSpecKey">データ種別検索キー</param>
         public JVDataSpecSetting(string dataSpec, JVDataSpecKey dataSpecKey) :
             this(dataSpec, dataSpecKey, TimeSpan.FromDays(121.67))
         { }
 
+        /// <summary>
+        /// データ種別 ID と検索時間単位を指定して、データ種別に関する動作設定を初期化します。
+        /// </summary>
+        /// <param name="dataSpec">データ種別 ID</param>
+        /// <param name="timeIntervalUnit">検索時間単位</param>
         public JVDataSpecSetting(string dataSpec, TimeSpan timeIntervalUnit) :
             this(true, dataSpec, new JVKaisaiDateTimeKey(new DateTime(1986, 01, 01)), timeIntervalUnit)
         { }
 
+        /// <summary>
+        /// データ種別 ID、データ種別検索キー、検索時間単位を指定して、データ種別に関する動作設定を初期化します。
+        /// </summary>
+        /// <param name="dataSpec">データ種別 ID</param>
+        /// <param name="dataSpecKey">データ種別検索キー</param>
+        /// <param name="timeIntervalUnit">検索時間単位</param>
         public JVDataSpecSetting(string dataSpec, JVDataSpecKey dataSpecKey, TimeSpan timeIntervalUnit) :
             this(true, dataSpec, dataSpecKey, timeIntervalUnit)
         { }
 
+        /// <summary>
+        /// 有効かどうか、データ種別 ID、データ種別検索キー、検索時間単位を指定して、データ種別に関する動作設定を初期化します。
+        /// </summary>
+        /// <param name="isEnabled">有効かどうか</param>
+        /// <param name="dataSpec">データ種別 ID</param>
+        /// <param name="dataSpecKey">データ種別検索キー</param>
+        /// <param name="timeIntervalUnit">検索時間単位</param>
         public JVDataSpecSetting(bool isEnabled, string dataSpec, JVDataSpecKey dataSpecKey, TimeSpan timeIntervalUnit)
         {
             IsEnabled = isEnabled;
@@ -61,8 +94,15 @@ namespace Urasandesu.JVLinkToSQLite.Settings
             TimeIntervalUnit = timeIntervalUnit;
         }
 
+        /// <summary>
+        /// 有効かどうかを取得または設定します。
+        /// </summary>
         public bool IsEnabled { get; set; }
+        
         private string _dataSpec;
+        /// <summary>
+        /// データ種別 ID を取得または設定します。
+        /// </summary>
         public string DataSpec
         {
             get { return _dataSpec; }
@@ -75,11 +115,18 @@ namespace Urasandesu.JVLinkToSQLite.Settings
                 }
             }
         }
+
         private JVDataSpec _jvDataSpec;
+        /// <summary>
+        /// データ種別を取得します。
+        /// </summary>
         [XmlIgnore]
         public JVDataSpec JVDataSpec { get => _jvDataSpec; }
 
         private string[] _excludedRecordSpecs;
+        /// <summary>
+        /// 除外するレコード種別 ID の配列を取得または設定します。
+        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public string[] ExcludedRecordSpecs
         {
@@ -99,9 +146,15 @@ namespace Urasandesu.JVLinkToSQLite.Settings
         }
 
         private JVRecordSpec[] _excludedJVRecordSpecs;
+        /// <summary>
+        /// 除外するレコード種別の配列を取得します。
+        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public JVRecordSpec[] ExcludedJVRecordSpecs { get => _excludedJVRecordSpecs; }
 
+        /// <summary>
+        /// データ種別検索キーを取得または設定します。
+        /// </summary>
         [XmlElement(typeof(JVRaceKey))]
         [XmlElement(typeof(JVKaisaiDateKey))]
         [XmlElement(typeof(JVKaisaiDateTimeKey))]
@@ -109,6 +162,9 @@ namespace Urasandesu.JVLinkToSQLite.Settings
         [XmlElement(typeof(JVRawKey))]
         public JVDataSpecKey DataSpecKey { get; set; }
 
+        /// <summary>
+        /// 検索時間単位を取得または設定します。
+        /// </summary>
         [XmlIgnore]
         public TimeSpan TimeIntervalUnit { get; set; }
 

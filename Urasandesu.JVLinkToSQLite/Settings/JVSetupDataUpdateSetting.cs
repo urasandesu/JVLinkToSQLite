@@ -26,6 +26,9 @@ using Urasandesu.JVLinkToSQLite.JVLinkWrappers;
 
 namespace Urasandesu.JVLinkToSQLite.Settings
 {
+    /// <summary>
+    /// セットアップデータ更新を表す動作設定詳細です。
+    /// </summary>
     public class JVSetupDataUpdateSetting : JVPastDataUpdateSetting
     {
         public JVSetupDataUpdateSetting()

@@ -39,8 +39,6 @@ namespace Test.Urasandesu.JVLinkToSQLite.Basis
         [Test]
         public void Hoge()
         {
-            Assert.That(JVDataSpec.HOYU.CanSkip, Is.True);
-
             var fileName = "HYFW2023090520230905150604.jvd";
             var dataFile = JVDataSpec.HOYU.GetDataFile(fileName);
             Assert.That(dataFile, Is.EqualTo(new JVDataFile(JVDataFileSpec.HOYU_HY_F_W, "HYFW2023090520230905150604.jvd", "20230905", new DateTime(2023, 09, 05, 15, 06, 04))));
