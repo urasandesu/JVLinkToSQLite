@@ -34,5 +34,7 @@ namespace Urasandesu.JVLinkToSQLite
         T Deserialize<T>(TextReader tr);
         TextWriter NewSerializingTextWriter(string xmlPath);
         void Serialize<T>(TextWriter tw, T obj);
+        string GetTempFileName();
+        void Copy(string sourceFileName, string destFileName, bool overwrite);
     }
 }

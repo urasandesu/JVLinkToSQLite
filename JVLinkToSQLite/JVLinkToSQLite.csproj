@@ -90,7 +90,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleListener.cs" />
-    <Compile Include="ProgramArgsHandler.cs" />
+    <Compile Include="SettingOptionsHandler.cs" />
+    <Compile Include="OptionsHandler`1.cs" />
+    <Compile Include="SettingOptions.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="Mixins\CommandLine\ParserSettingsMixin.cs" />
+    <Compile Include="MainOptionsHandler.cs" />
     <Compile Include="ReturnCodes.cs" />
     <Compile Include="SetupForm.cs">
       <SubType>Form</SubType>
@@ -101,7 +106,7 @@
     <Compile Include="LogLevels.cs" />
     <Compile Include="Modes.cs" />
     <Compile Include="MyConsole.cs" />
-    <Compile Include="Options.cs" />
+    <Compile Include="MainOptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

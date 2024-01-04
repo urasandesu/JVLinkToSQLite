@@ -28,6 +28,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using Urasandesu.JVLinkToSQLite.JVLinkWrappers;
+using Urasandesu.JVLinkToSQLite.Basis.Mixins.System.Xml;
 
 namespace Urasandesu.JVLinkToSQLite.Settings
 {
@@ -196,6 +197,18 @@ namespace Urasandesu.JVLinkToSQLite.Settings
         object ICloneable.Clone()
         {
             return Clone();
+        }
+
+        public static string GetXPath(XmlNode node)
+        {
+            var predicate = new Func<XmlNode, bool>(n => n.Name == nameof(JVDataSpecSetting));
+            var trueFunc = new Func<XmlNode, Func<string>, string>((n, f) =>
+            {
+                var dsn = n[nameof(DataSpec)];
+                return f() + $"[{dsn.Name}='{dsn.InnerText}']";
+            });
+
+            return node.GetXPath(predicate, trueFunc);
         }
     }
 }

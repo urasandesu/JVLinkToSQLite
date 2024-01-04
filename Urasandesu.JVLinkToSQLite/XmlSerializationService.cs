@@ -85,5 +85,20 @@ namespace Urasandesu.JVLinkToSQLite
             xs.Serialize(tw, obj);
             VerboseApiCalled(_listener, this, nameof(XmlSerializer), nameof(XmlSerializer.Serialize), typeof(void));
         }
+
+        public string GetTempFileName()
+        {
+            VerboseApiCalling(_listener, this, nameof(Path), nameof(Path.GetTempFileName));
+            var tempFileName = Path.GetTempFileName();
+            VerboseApiCalled(_listener, this, nameof(Path), nameof(Path.GetTempFileName), tempFileName);
+            return tempFileName;
+        }
+
+        public void Copy(string sourceFileName, string destFileName, bool overwrite)
+        {
+            VerboseApiCalling(_listener, this, nameof(File), nameof(File.Copy), sourceFileName, destFileName, overwrite);
+            File.Copy(sourceFileName, destFileName, overwrite);
+            VerboseApiCalled(_listener, this, nameof(File), nameof(File.Copy), typeof(void));
+        }
     }
 }

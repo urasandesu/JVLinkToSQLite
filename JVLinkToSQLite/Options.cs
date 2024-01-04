@@ -23,40 +23,11 @@
 // additional permission to convey the resulting work.
 
 using CommandLine;
-using Urasandesu.JVLinkToSQLite;
 
 namespace JVLinkToSQLite
 {
-    internal class Options
+    internal abstract class Options
     {
-        [Option('m', "mode", HelpText =
-            "モードの設定。以下のパターンを指定可能です：\n" +
-            "* " + nameof(Modes.Exec) + "\n" +
-            "* " + nameof(Modes.Event) + "\n" +
-            "* " + nameof(Modes.Init) + "\n" +
-            "* " + nameof(Modes.About) + "\n" +
-            "* " + nameof(Modes.DefaultSetting))]
-        public Modes Mode { get; set; }
-
-        [Option('d', "datasource", Default = @"race.db", HelpText =
-            "データ ソース。SQLite ファイルのパスを指定します。")]
-        public string DataSource { get; set; }
-
-        [Option('t', "throttlesize", Default = 100, HelpText =
-            "スロットルサイズ。JVLinkToSQLiteは、JV-Dataのレコード読み取りと " + 
-            "SQLiteへの書き込みを非同期で行いますが、このパラメータはSQLite " + 
-            "へ書き込むまでに、JV-Dataを何レコード分遅らせるかを指定します。 " +
-            "書き込みを遅らせないほうがスループットもメモリ効率も良いのですが、 " + 
-            "開発中に何度か、サーバーへの単位時間当たりのアクセス頻度オーバーが " + 
-            "原因と考えられる、JV-Link側の不規則なエラーが発生したため、処理を " + 
-            "遅らせるようにしました。もし動作設定を変えていないのに不規則な " + 
-            "エラーが発生するようでしたら、この値を増やしてみてください。")]
-        public int ThrottleSize { get; set; }
-
-        [Option('s', "setting", Default = @"setting.xml", HelpText =
-            "動作設定。JVLinkToSQLiteSetting クラスのインスタンスの情報を記載した XML ファイルのパスを指定します。")]
-        public string Setting { get; set; }
-
         [Option('l', "loglevel", Default = LogLevels.Info, HelpText =
             "ログ レベルの設定。以下のパターンを指定可能です：\n" +
             "* " + nameof(LogLevels.Error) + "\n" +
@@ -65,19 +36,5 @@ namespace JVLinkToSQLite
             "* " + nameof(LogLevels.Verbose) + "\n" +
             "* " + nameof(LogLevels.Debug))]
         public LogLevels LogLevel { get; set; }
-
-        [Option('u', "skipslastmodifiedupdate", Default = false, HelpText =
-            "最新読み出し開始ポイント日時の更新をスキップするかどうかを指定します。")]
-        public bool SkipsLastModifiedUpdate { get; set; }
-
-        public JVLinkToSQLiteBootstrap.LoadSettingParameter ToLoadSettingParameter()
-        {
-            return new JVLinkToSQLiteBootstrap.LoadSettingParameter
-            {
-                SettingXmlPath = Setting,
-                SQLiteDataSource = DataSource,
-                SQLiteThrottleSize = ThrottleSize
-            };
-        }
     }
 }
