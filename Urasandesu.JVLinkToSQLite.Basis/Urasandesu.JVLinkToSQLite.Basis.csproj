@@ -105,6 +105,7 @@
     <Compile Include="Mixins\System\EmbeddableVersion.cs" />
     <Compile Include="Mixins\System\StringMixin.cs" />
     <Compile Include="Mixins\System\TypeMixin.cs" />
+    <Compile Include="Mixins\System\Xml\XmlNodeMixin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

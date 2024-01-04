@@ -26,7 +26,6 @@ using CommandLine;
 using DryIoc;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Xml;
 using Urasandesu.JVLinkToSQLite;
 using Urasandesu.JVLinkToSQLite.Settings;
@@ -93,7 +92,7 @@ namespace JVLinkToSQLite
             Console.WriteLine($"指定された値 '{options.Value}' で、以下のノードを更新します。続行しますか？（y/N）");
             foreach (XmlNode node in nodes)
             {
-                Console.WriteLine(GetXPath(node));
+                Console.WriteLine(JVDataSpecSetting.GetXPath(node));
             }
 
             if (!options.Force)
@@ -141,24 +140,6 @@ namespace JVLinkToSQLite
                  this, 
                  args => $"動作設定を更新しました。");
             return (int)ReturnCodes.Success;
-        }
-
-        private string GetXPath(XmlNode node)
-        {
-            if (node.ParentNode == null)
-            {
-                return string.Empty;
-            }
-
-            if (node.Name == nameof(JVDataSpecSetting))
-            {
-                var dataSpecNode = node[nameof(JVDataSpecSetting.DataSpec)];
-                return GetXPath(node.ParentNode) + "/" + node.Name + $"[{dataSpecNode.Name}='{dataSpecNode.InnerText}']";
-            }
-            else
-            {
-                return GetXPath(node.ParentNode) + "/" + node.Name;
-            }
         }
     }
 }
