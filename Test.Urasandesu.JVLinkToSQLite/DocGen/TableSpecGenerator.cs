@@ -34,6 +34,7 @@ using Urasandesu.JVLinkToSQLite;
 using Urasandesu.JVLinkToSQLite.Basis.Mixins.System.Data;
 using Urasandesu.JVLinkToSQLite.JVLinkWrappers;
 using Urasandesu.JVLinkToSQLite.JVLinkWrappers.DataBridges;
+using Urasandesu.JVLinkToSQLite.Operators;
 
 namespace Test.Urasandesu.JVLinkToSQLite.DocGen
 {
@@ -87,6 +88,11 @@ namespace Test.Urasandesu.JVLinkToSQLite.DocGen
                             }
                         }
                     }
+
+                    cmd.CommandText = JVDataFileSkippabilityHandler.CreateTableSql;
+                    cmd.Parameters.Clear();
+                    cmd.ExecuteNonQuery();
+                    WriteTableDocument(cmd, JVDataFileSkippabilityHandler.TableName);
                 }
             }
         }

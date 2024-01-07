@@ -42,7 +42,7 @@ namespace JVLinkToSQLite
         public string Value { get; set; }
 
         [Option('f', "force", Default = false, HelpText =
-            "変更時の確認メッセージを表示するかどうか。")]
+            "変更時の確認メッセージを表示せず、強制的に実行するかどうか。")]
         public bool Force { get; set; }
     }
 }
