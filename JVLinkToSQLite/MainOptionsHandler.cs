@@ -188,7 +188,7 @@ JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQ
 
         private static int WatchEventCore(IResolver resolver, IJVServiceOperationListener listener, MainOptions options)
         {
-            var retCode = ReturnCodes.Success;
+            var retCode = (int)ReturnCodes.Success;
             var bootstrap = resolver.Resolve<JVLinkToSQLiteBootstrap>();
             var setting = bootstrap.LoadSettingOrDefault(options.ToLoadSettingParameter());
             foreach (var settingDetail in setting.Details)
@@ -197,7 +197,7 @@ JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQ
                 var rsltAgg = oprAgg.OperateAll();
                 if (!rsltAgg.AreAllSucceeded)
                 {
-                    retCode = ReturnCodes.Warning;
+                    retCode = rsltAgg.FirstReturnCode;
                     Warning(listener,
                             typeof(MainOptionsHandler),
                             MessageForWarningCanContinue,
@@ -208,7 +208,7 @@ JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQ
                 }
             }
 
-            return (int)retCode;
+            return retCode;
         }
 
         private static int Execute(IResolver resolver, MainOptions options)
@@ -225,7 +225,7 @@ JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQ
 
         private static int ExecuteCore(IResolver resolver, IJVServiceOperationListener listener, MainOptions options)
         {
-            var retCode = ReturnCodes.Success;
+            var retCode = (int)ReturnCodes.Success;
             var bootstrap = resolver.Resolve<JVLinkToSQLiteBootstrap>();
             var setting = bootstrap.LoadSettingOrDefault(options.ToLoadSettingParameter());
             foreach (var settingDetail in setting.Details)
@@ -234,7 +234,7 @@ JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQ
                 var rsltAgg = oprAgg.OperateAll();
                 if (!rsltAgg.AreAllSucceeded)
                 {
-                    retCode = ReturnCodes.Warning;
+                    retCode = rsltAgg.FirstReturnCode;
                     Warning(listener,
                             typeof(MainOptionsHandler),
                             MessageForWarningCanContinue,
@@ -245,12 +245,12 @@ JVLinkToSQLite は、JRA-VAN データラボが提供する競馬データを SQ
                 }
             }
 
-            if (retCode == ReturnCodes.Success && !options.SkipsLastModifiedUpdate)
+            if (retCode == (int)ReturnCodes.Success && !options.SkipsLastModifiedUpdate)
             {
                 bootstrap.SaveSetting(options.Setting, setting);
             }
 
-            return (int)retCode;
+            return retCode;
         }
     }
 }
