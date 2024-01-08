@@ -109,7 +109,7 @@ namespace JVLinkToSQLite
 
             foreach (XmlNode node in nodes)
             {
-                node.InnerText = options.Value;
+                node.InnerXml = options.Value;
             }
 
             var tempFileName = xss.GetTempFileName();
