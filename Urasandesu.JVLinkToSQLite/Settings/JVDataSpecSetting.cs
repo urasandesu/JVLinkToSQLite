@@ -58,7 +58,7 @@ namespace Urasandesu.JVLinkToSQLite.Settings
         /// <param name="dataSpec">データ種別 ID</param>
         /// <param name="dataSpecKey">データ種別検索キー</param>
         public JVDataSpecSetting(string dataSpec, JVDataSpecKey dataSpecKey) :
-            this(dataSpec, dataSpecKey, TimeSpan.FromDays(121.67))
+            this(dataSpec, dataSpecKey, TimeSpan.FromDays(121.75))
         { }
 
         /// <summary>

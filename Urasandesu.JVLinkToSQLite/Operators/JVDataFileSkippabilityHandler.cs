@@ -52,19 +52,30 @@ namespace Urasandesu.JVLinkToSQLite.Operators
 
         private const int True = 1;
         private const int False = 0;
-        public static readonly string CreateTableSql = "create table if not exists SY_PROC_FILES( "
-                                                       + "  FileName text primary key, "
-                                                       + "  DataSpec text, "
-                                                       + "  RecordSpec text, "
-                                                       + "  CategorySpec text, "
-                                                       + "  SaveSpec text, "
-                                                       + "  DatetimeKey text, "
-                                                       + "  PublishedDateTime datetime, "
-                                                       + "  ProcessedAt datetime, "
-                                                       + "  ExpirationDate datetime "
+        public static readonly string TableName = "SY_PROC_FILES";
+        public static readonly string CreateTableSql = $"create table if not exists {TableName}( \r\n"
+                                                       + "  -- 処理済みファイル情報 \r\n"
+                                                       + "  --   1.   . ファイル名:処理したデータ ファイル名（*.jvd ファイル）。 \r\n"
+                                                       + "  --   2.   . データ種別 ID: 処理したデータ ファイルに含まれるであろうデータ種別 ID。 \r\n"
+                                                       + "  --   3.   . レコード種別 ID: データ ファイルのレコード種別 ID。 \r\n"
+                                                       + "  --   4.   . 区分 ID: データ ファイルの区分 ID。 \r\n"
+                                                       + "  --   5.   . 保存 ID: データ ファイルの保存 ID。 \r\n"
+                                                       + "  --   6.   . 日時キー: データ ファイルの日時キー。 \r\n"
+                                                       + "  --   7.   . 公開日時: データ ファイルの公開日時。 \r\n"
+                                                       + "  --   8.   . 処理日時: データ ファイルを処理した日時。 \r\n"
+                                                       + "  --   9.   . 有効期限: 処理済みファイル情報の有効期限日時。 \r\n"
+                                                       + "  FileName text primary key, \r\n"
+                                                       + "  DataSpec text, \r\n"
+                                                       + "  RecordSpec text, \r\n"
+                                                       + "  CategorySpec text, \r\n"
+                                                       + "  SaveSpec text, \r\n"
+                                                       + "  DatetimeKey text, \r\n"
+                                                       + "  PublishedDateTime datetime, \r\n"
+                                                       + "  ProcessedAt datetime, \r\n"
+                                                       + "  ExpirationDate datetime \r\n"
                                                        + ") ";
         public static readonly string InsertRecordSql = "insert "
-                                                        + "into SY_PROC_FILES( "
+                                                        + $"into {TableName}( "
                                                         + "  FileName, "
                                                         + "  DataSpec, "
                                                         + "  RecordSpec, "
@@ -98,8 +109,8 @@ namespace Urasandesu.JVLinkToSQLite.Operators
                                                         + "  PublishedDateTime=@PublishedDateTime, "
                                                         + "  ProcessedAt=@ProcessedAt, "
                                                         + "  ExpirationDate=@ExpirationDate ";
-        public static readonly string SelectCountSql = "select count(*) from SY_PROC_FILES where FileName = @FileName";
-        public static readonly string DeleteExpiredSql = "delete from SY_PROC_FILES where ExpirationDate < @now";
+        public static readonly string SelectCountSql = $"select count(*) from {TableName} where FileName = @FileName";
+        public static readonly string DeleteExpiredSql = $"delete from {TableName} where ExpirationDate < @now";
         private readonly IJVServiceOperationListener _listener;
         private readonly SQLiteCommand _command;
         private readonly HashSet<JVRecordSpec> _excludedRecordSpecSet;

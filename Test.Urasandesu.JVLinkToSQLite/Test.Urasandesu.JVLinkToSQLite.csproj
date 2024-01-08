@@ -94,6 +94,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DocGen\TableSpecGenerator.cs" />
     <Compile Include="JVLinkWrappers\IIntervalDivisibleDataSpecKeyMixinTest.cs" />
     <Compile Include="MarshalByRefRunner.cs" />
     <Compile Include="DelegateMixin.cs" />

@@ -52,7 +52,7 @@ namespace Urasandesu.JVLinkToSQLite.Settings
                         new JVDataSpecSetting("RACE", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365))) { ExcludedRecordSpecs = new[]{ "H1", "H6", "O1", "O2", "O3", "O4", "O5", "O6", "WF" } },
                         new JVDataSpecSetting("DIFF", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365)), TimeSpan.Zero),
                         new JVDataSpecSetting("BLOD", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365))),
-                        new JVDataSpecSetting("SNAP", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365))),
+                        new JVDataSpecSetting("SNAP", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365))) { IsEnabled = false },
                         new JVDataSpecSetting("SLOP", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365))),
                         new JVDataSpecSetting("WOOD", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365))),
                         new JVDataSpecSetting("YSCH", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365))),
@@ -62,7 +62,7 @@ namespace Urasandesu.JVLinkToSQLite.Settings
                         new JVDataSpecSetting("MING", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365))),
                         new JVDataSpecSetting("DIFN", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365)), TimeSpan.Zero),
                         new JVDataSpecSetting("BLDN", new JVKaisaiDateTimeRangeKey(DateTime.Today.AddDays(-365), DateTime.Today)),
-                        new JVDataSpecSetting("SNPN", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365))),
+                        new JVDataSpecSetting("SNPN", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365))) { IsEnabled = false },
                         new JVDataSpecSetting("HOSN", new JVKaisaiDateTimeKey(DateTime.Today.AddDays(-365)), TimeSpan.Zero),
                     };
                     detail.DataSpecSettings = dataSpecSettings;
@@ -76,7 +76,7 @@ namespace Urasandesu.JVLinkToSQLite.Settings
                         new JVDataSpecSetting("RACE") { ExcludedRecordSpecs = new[]{ "H1", "H6", "O1", "O2", "O3", "O4", "O5", "O6", "WF" } },
                         new JVDataSpecSetting("DIFF", TimeSpan.Zero),
                         new JVDataSpecSetting("BLOD"),
-                        new JVDataSpecSetting("SNAP", new JVKaisaiDateTimeKey(new DateTime(2004, 01, 01))),
+                        new JVDataSpecSetting("SNAP", new JVKaisaiDateTimeKey(new DateTime(2004, 01, 01))) { IsEnabled = false },
                         new JVDataSpecSetting("SLOP", new JVKaisaiDateTimeKey(new DateTime(2003, 01, 01))),
                         new JVDataSpecSetting("WOOD", new JVKaisaiDateTimeKey(new DateTime(2021, 07, 27))),
                         new JVDataSpecSetting("YSCH", new JVKaisaiDateTimeKey(new DateTime(2000, 01, 01))),
@@ -86,7 +86,7 @@ namespace Urasandesu.JVLinkToSQLite.Settings
                         new JVDataSpecSetting("MING", new JVKaisaiDateTimeKey(new DateTime(2001, 09, 01))),
                         new JVDataSpecSetting("DIFN", new JVKaisaiDateTimeKey(new DateTime(2023, 08, 08)), TimeSpan.Zero),
                         new JVDataSpecSetting("BLDN", new JVKaisaiDateTimeKey(new DateTime(2023, 08, 08))),
-                        new JVDataSpecSetting("SNPN", new JVKaisaiDateTimeKey(new DateTime(2023, 08, 08))),
+                        new JVDataSpecSetting("SNPN", new JVKaisaiDateTimeKey(new DateTime(2023, 08, 08))) { IsEnabled = false },
                         new JVDataSpecSetting("HOSN", new JVKaisaiDateTimeKey(new DateTime(2023, 08, 08)), TimeSpan.Zero),
                     };
                     detail.DataSpecSettings = dataSpecSettings;
@@ -100,26 +100,26 @@ namespace Urasandesu.JVLinkToSQLite.Settings
                         new JVDataSpecSetting("0B12", new JVKaisaiDateKey(DateTime.Today)),
                         new JVDataSpecSetting("0B15", new JVKaisaiDateKey(DateTime.Today)),
 
-                        new JVDataSpecSetting("0B30", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")),
-                        new JVDataSpecSetting("0B31", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")),
-                        new JVDataSpecSetting("0B32", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")),
-                        new JVDataSpecSetting("0B33", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")),
-                        new JVDataSpecSetting("0B34", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")),
-                        new JVDataSpecSetting("0B35", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")),
-                        new JVDataSpecSetting("0B36", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")),
-                        new JVDataSpecSetting("0B20", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")),
+                        new JVDataSpecSetting("0B30", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
+                        new JVDataSpecSetting("0B31", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
+                        new JVDataSpecSetting("0B32", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
+                        new JVDataSpecSetting("0B33", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
+                        new JVDataSpecSetting("0B34", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
+                        new JVDataSpecSetting("0B35", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
+                        new JVDataSpecSetting("0B36", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
+                        new JVDataSpecSetting("0B20", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
 
                         new JVDataSpecSetting("0B11", new JVKaisaiDateKey(DateTime.Today)),
                         new JVDataSpecSetting("0B14", new JVKaisaiDateKey(DateTime.Today)),
 
-                        new JVDataSpecSetting("0B16", new JVRawKey("hoge")),
+                        new JVDataSpecSetting("0B16", new JVRawKey("hoge")) { IsEnabled = false },
 
                         new JVDataSpecSetting("0B13", new JVKaisaiDateKey(DateTime.Today)),
                         new JVDataSpecSetting("0B17", new JVKaisaiDateKey(DateTime.Today)),
 
-                        new JVDataSpecSetting("0B41", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")),
-                        new JVDataSpecSetting("0B42", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")),
-                        new JVDataSpecSetting("0B51", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")),
+                        new JVDataSpecSetting("0B41", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
+                        new JVDataSpecSetting("0B42", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
+                        new JVDataSpecSetting("0B51", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
                     };
                     detail.DataSpecSettings = dataSpecSettings;
                     details.Add(detail);

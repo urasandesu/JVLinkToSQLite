@@ -38,11 +38,11 @@ namespace JVLinkToSQLite
         public string XPath { get; set; }
 
         [Option('v', "value", Required = true, HelpText =
-            "変更後の値。")]
+            "変更後の値。'<' や '>' のエスケープを行わないため、あるノード下にある子ノード群を、まとめて差し替えることも可能です。")]
         public string Value { get; set; }
 
         [Option('f', "force", Default = false, HelpText =
-            "変更時の確認メッセージを表示するかどうか。")]
+            "変更時の確認メッセージを表示せず、強制的に実行するかどうか。")]
         public bool Force { get; set; }
     }
 }
