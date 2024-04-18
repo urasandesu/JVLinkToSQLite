@@ -44,13 +44,23 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers.DataBridges
             };
             ChildRowCountList = new[]
             {
-                _dataStruct.HyoTansyo.TakeWhile(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).Count(),
-                _dataStruct.HyoFukusyo.TakeWhile(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).Count(),
-                _dataStruct.HyoWakuren.TakeWhile(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).Count(),
-                _dataStruct.HyoUmaren.TakeWhile(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).Count(),
-                _dataStruct.HyoWide.TakeWhile(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).Count(),
-                _dataStruct.HyoUmatan.TakeWhile(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).Count(),
-                _dataStruct.HyoSanrenpuku.TakeWhile(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).Count(),
+                _dataStruct.HyoTansyo.Length,
+                _dataStruct.HyoFukusyo.Length,
+                _dataStruct.HyoWakuren.Length,
+                _dataStruct.HyoUmaren.Length,
+                _dataStruct.HyoWide.Length,
+                _dataStruct.HyoUmatan.Length,
+                _dataStruct.HyoSanrenpuku.Length,
+            };
+            ChildRowMasksList = new[]
+            {
+                _dataStruct.HyoTansyo.Select(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).ToArray(),
+                _dataStruct.HyoFukusyo.Select(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).ToArray(),
+                _dataStruct.HyoWakuren.Select(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).ToArray(),
+                _dataStruct.HyoUmaren.Select(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).ToArray(),
+                _dataStruct.HyoWide.Select(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).ToArray(),
+                _dataStruct.HyoUmatan.Select(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).ToArray(),
+                _dataStruct.HyoSanrenpuku.Select(_ => !string.IsNullOrEmpty(_.Hyo.Trim())).ToArray(),
             };
             ChildPureColumnsList = new[]
             {

@@ -23,6 +23,7 @@
 // additional permission to convey the resulting work.
 
 using System;
+using System.Linq;
 using static JVData_Struct;
 
 namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers.DataBridges
@@ -45,6 +46,13 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers.DataBridges
                 _dataStruct.BanusiChaku.Length,
                 _dataStruct.BreederChaku.Length,
             };
+            ChildRowMasksList = new[]
+            {
+                _dataStruct.KisyuChaku.Select(_ => true).ToArray(),
+                _dataStruct.ChokyoChaku.Select(_ => true).ToArray(),
+                _dataStruct.BanusiChaku.Select(_ => true).ToArray(),
+                _dataStruct.BreederChaku.Select(_ => true).ToArray(),
+            };            
             ChildPureColumnsList = new[]
             {
                 JVDataStructColumns.CK_KisyuChakuWithoutParent.Value,
@@ -94,6 +102,13 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers.DataBridges
                 _dataStruct.ChokyoChaku.Length,
                 _dataStruct.BanusiChaku.Length,
                 _dataStruct.BreederChaku.Length,
+            };
+            ChildRowMasksList = new[]
+            {
+                _dataStruct.KisyuChaku.Select(_ => true).ToArray(),
+                _dataStruct.ChokyoChaku.Select(_ => true).ToArray(),
+                _dataStruct.BanusiChaku.Select(_ => true).ToArray(),
+                _dataStruct.BreederChaku.Select(_ => true).ToArray(),
             };
             ChildPureColumnsList = new[]
             {

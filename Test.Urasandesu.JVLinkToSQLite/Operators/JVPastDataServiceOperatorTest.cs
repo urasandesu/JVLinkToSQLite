@@ -70,12 +70,12 @@ namespace Test.Urasandesu.JVLinkToSQLite.Operators
             var jvLinkSrv = Substitute.For<IJVLinkService>();
             {
                 var openRslt = JVOpenResult.New(-1, JVDataSpec.RACE, JVOpenOptions.Normal);
-                var dataSpecKey = new JVKaisaiDateTimeRangeKey(new DateTime(1986, 01, 01, 00, 00, 00), new DateTime(1986, 05, 02, 16, 04, 48));
+                var dataSpecKey = new JVKaisaiDateTimeRangeKey(new DateTime(1986, 01, 01, 00, 00, 00), new DateTime(1986, 05, 02, 18, 00, 00));
                 jvLinkSrv.JVOpen(Arg.Any<JVDataSpec>(), dataSpecKey, Arg.Any<JVOpenOptions>()).Returns(openRslt);
             }
             {
                 var openRslt = JVOpenResult.New(-111, JVDataSpec.RACE, JVOpenOptions.Normal);
-                var dataSpecKey = new JVKaisaiDateTimeRangeKey(new DateTime(1986, 05, 02, 16, 04, 48), new DateTime(1986, 09, 01, 08, 09, 36));
+                var dataSpecKey = new JVKaisaiDateTimeRangeKey(new DateTime(1986, 05, 02, 18, 00, 00), new DateTime(1986, 09, 01, 12, 00, 00));
                 jvLinkSrv.JVOpen(Arg.Any<JVDataSpec>(), dataSpecKey, Arg.Any<JVOpenOptions>()).Returns(openRslt);
             }
             var connInfo = new SQLiteConnectionInfo(":memory:");
