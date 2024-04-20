@@ -36,8 +36,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("be380d80-05bb-40c9-aaf2-6b51961b3af8")]
-[assembly: AssemblyVersion("0.1.0.0")]
-[assembly: AssemblyFileVersion("0.1.0.0")]
+[assembly: AssemblyVersion("0.1.1.0")]
+[assembly: AssemblyFileVersion("0.1.1.0")]
 
 [assembly: InternalsVisibleTo("Test.Urasandesu.JVLinkToSQLite")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
