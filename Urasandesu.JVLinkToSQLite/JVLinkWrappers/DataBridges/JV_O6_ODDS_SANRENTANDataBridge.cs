@@ -38,7 +38,11 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers.DataBridges
             };
             ChildRowCountList = new[]
             {
-                _dataStruct.OddsSanrentanInfo.TakeWhile(_ => !string.IsNullOrEmpty(_.Odds.Trim())).Count(),
+                _dataStruct.OddsSanrentanInfo.Length,
+            };
+            ChildRowMasksList = new[]
+            {
+                _dataStruct.OddsSanrentanInfo.Select(_ => !string.IsNullOrEmpty(_.Odds.Trim())).ToArray(),
             };
             ChildPureColumnsList = new[]
             {

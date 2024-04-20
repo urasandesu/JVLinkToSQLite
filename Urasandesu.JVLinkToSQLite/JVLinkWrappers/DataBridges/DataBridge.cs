@@ -39,6 +39,7 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers.DataBridges
         public string Prefix { get; private set; }
         public IReadOnlyList<string> ChildTableNameList { get; protected set; }
         public IReadOnlyList<int> ChildRowCountList { get; protected set; }
+        public IReadOnlyList<bool[]> ChildRowMasksList { get; protected set; }
         public IReadOnlyList<IReadOnlyList<BridgeColumn>> ChildPureColumnsList { get; protected set; }
         public Func<Array[]> ChildGetterList { get; protected set; }
         public IReadOnlyList<JVDataStructCreateTableSources> ChildCreateTableSourcesList { get; protected set; }
@@ -135,12 +136,16 @@ namespace Urasandesu.JVLinkToSQLite.JVLinkWrappers.DataBridges
                 {
                     var childTableName = ChildTableNameList[i];
                     var childRowCount = ChildRowCountList[i];
+                    var childRowMasks = ChildRowMasksList[i];
                     var pureColumns = ChildPureColumnsList[i];
                     var values = ChildGetterList()[i];
 
                     var idxLength = values.Length.ToString().Length;    // 数が上下しても揃えられるよう、子レコードの最大数で桁数を決める
                     for (var j = 0; j < childRowCount; j++)
                     {
+                        if (!childRowMasks[j])
+                            continue;
+
                         var childBuiltCommand = commandCache.Get(new SQLitePreparedCommandKey(InsertId, childTableName),
                                                                  () => ChildInsertSourcesList[i].GetCommandText(childTableName));
                         childBuiltCommand.PrepareParameterRange(parentKeyParams);
