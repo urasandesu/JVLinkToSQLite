@@ -119,7 +119,7 @@ namespace Urasandesu.JVLinkToSQLite.Settings
 
                         new JVDataSpecSetting("0B41", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
                         new JVDataSpecSetting("0B42", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
-                        new JVDataSpecSetting("0B51", new JVRaceKey(DateTime.Today, "01", "01", "01", "01")) { IsEnabled = false },
+                        new JVDataSpecSetting("0B51", new JVKaisaiDateKey(DateTime.Today)) { IsEnabled = false },
                     };
                     detail.DataSpecSettings = dataSpecSettings;
                     details.Add(detail);
