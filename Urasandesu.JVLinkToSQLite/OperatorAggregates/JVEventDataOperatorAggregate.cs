@@ -23,8 +23,10 @@
 // additional permission to convey the resulting work.
 
 using DryIoc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Urasandesu.JVLinkToSQLite.JVLinkWrappers;
 using Urasandesu.JVLinkToSQLite.Operators;
 using Urasandesu.JVLinkToSQLite.Settings;
@@ -72,57 +74,76 @@ namespace Urasandesu.JVLinkToSQLite.OperatorAggregates
             private readonly JVEventDataOperatorAggregate _this;
             private readonly JVDataSpecSetting _dataSpecSetting;
             private readonly List<JVLinkServiceOperationResult> _oprRslts;
+            private readonly CancellationTokenSource _oprCnclTknSrc;
 
-            public MyWatchEventListener(JVEventDataOperatorAggregate @this, JVDataSpecSetting dataSpecSetting, List<JVLinkServiceOperationResult> oprRslts)
+            public MyWatchEventListener(JVEventDataOperatorAggregate @this, JVDataSpecSetting dataSpecSetting, List<JVLinkServiceOperationResult> oprRslts, CancellationTokenSource oprCnclTknSrc)
             {
                 _this = @this;
                 _dataSpecSetting = dataSpecSetting;
                 _oprRslts = oprRslts;
+                _oprCnclTknSrc = oprCnclTknSrc;
             }
 
             public void OnEvent(string bstr)
             {
-                var srvOpr = default(JVServiceOperator);
-                if (_dataSpecSetting.IsEnabled)
+                try
                 {
-                    var dataSpecSetting = _dataSpecSetting.Clone();
-                    dataSpecSetting.DataSpecKey = new JVRawKey(bstr);
-                    srvOpr = _this._resolver.Resolve<JVRealTimeDataServiceOperator.Factory>().New(_this._connInfo, dataSpecSetting);
+                    var srvOpr = default(JVServiceOperator);
+                    if (_dataSpecSetting.IsEnabled)
+                    {
+                        var dataSpecSetting = _dataSpecSetting.Clone();
+                        dataSpecSetting.DataSpecKey = new JVRawKey(bstr);
+                        srvOpr = _this._resolver.Resolve<JVRealTimeDataServiceOperator.Factory>().New(_this._connInfo, dataSpecSetting);
+                    }
+                    else
+                    {
+                        srvOpr = _this._resolver.Resolve<JVNullServiceOperator>();
+                    }
+                    _oprRslts.Add(srvOpr.Operate());
                 }
-                else
+                catch (Exception ex)
                 {
-                    srvOpr = _this._resolver.Resolve<JVNullServiceOperator>();
+                    // JV-Link から通知されるイベントはバックグラウンド スレッドのものであるため、発生した例外は明示的にハンドリングする必要がある（そうしないと握りつぶされてしまう）。
+                    // ここに来る例外は基本的に復旧が不可能なもの（SQLite の DB 破損など）であるため、イベント待ちをキャンセルし、例外を結果に追加する。
+                    Error(_this._listener, 
+                          _this, 
+                          args => $"データ種別 '{((JVDataSpecSetting)args[0]).JVDataSpec}' のイベント発生時に不明なエラーが発生しました。例外：{args[1]}", 
+                          _dataSpecSetting, ex);
+                    _oprCnclTknSrc.Cancel();
+                    _oprRslts.Add(JVLinkServiceOperationResult.Exception(ex));
                 }
-                _oprRslts.Add(srvOpr.Operate());
             }
         }
 
         public override JVOperationResultAggregate OperateAll()
         {
-            var oprRslts = new List<JVLinkServiceOperationResult>();
-            var dispatcher = new JVWatchEventDispatcher();
-            foreach (var dataSpecSetting in _dataSpecSettings.Where(_ => _.JVDataSpec.CanWatchEvent))
+            using (var oprCnclTknSrc = new CancellationTokenSource())
             {
-                Info(_listener,
-                     this,
-                     args => $"データ種別 '{((JVDataSpecSetting)args[0]).JVDataSpec}' の待ち受けを{(((JVDataSpecSetting)args[0]).IsEnabled ? "開始" : "スキップ")}．．．",
-                     dataSpecSetting);
-                var listener = new MyWatchEventListener(this, dataSpecSetting, oprRslts);
-                dispatcher.AddListener(dataSpecSetting.JVDataSpec, listener);
-            }
+                var oprRslts = new List<JVLinkServiceOperationResult>();
+                var dispatcher = new JVWatchEventDispatcher();
+                foreach (var dataSpecSetting in _dataSpecSettings.Where(_ => _.JVDataSpec.CanWatchEvent))
+                {
+                    Info(_listener,
+                         this,
+                         args => $"データ種別 '{((JVDataSpecSetting)args[0]).JVDataSpec}' の待ち受けを{(((JVDataSpecSetting)args[0]).IsEnabled ? "開始" : "スキップ")}．．．",
+                         dataSpecSetting);
+                    var listener = new MyWatchEventListener(this, dataSpecSetting, oprRslts, oprCnclTknSrc);
+                    dispatcher.AddListener(dataSpecSetting.JVDataSpec, listener);
+                }
 
-            try
-            {
-                oprRslts.Add(JVLinkServiceOperationResult.From(_jvLinkSrv.JVWatchEvent(dispatcher)));
+                try
+                {
+                    oprRslts.Add(JVLinkServiceOperationResult.From(_jvLinkSrv.JVWatchEvent(dispatcher)));
 
-                _listener.OnExternalNotificationRequired(this, new JVServiceMessageEventArgs(_ => "イベント待ち．．．"));
-            }
-            finally
-            {
-                oprRslts.Add(JVLinkServiceOperationResult.From(_jvLinkSrv.JVWatchEventClose()));
-            }
+                    _listener.OnExternalNotificationRequired(this, new JVServiceMessageEventArgs(oprCnclTknSrc.Token, _ => "イベント待ち．．．"));
+                }
+                finally
+                {
+                    oprRslts.Add(JVLinkServiceOperationResult.From(_jvLinkSrv.JVWatchEventClose()));
+                }
 
-            return new JVOperationResultAggregate(oprRslts.ToArray());
+                return new JVOperationResultAggregate(oprRslts.ToArray());
+            }
         }
     }
 }

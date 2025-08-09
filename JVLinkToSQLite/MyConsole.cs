@@ -35,15 +35,15 @@ namespace JVLinkToSQLite
             Console.WriteLine($"[{DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")}]{value}");
         }
 
-        public static string ReadKey()
+        public static string ReadKey(CancellationToken oprCnclTkn)
         {
             var cki = default(ConsoleKeyInfo);
-            while (Console.KeyAvailable == false)
+            while (Console.KeyAvailable == false && !oprCnclTkn.IsCancellationRequested)
             {
                 Thread.Sleep(50);
                 Application.DoEvents();
             }
-            cki = Console.ReadKey(true);
+            cki = !oprCnclTkn.IsCancellationRequested ? Console.ReadKey(true) : new ConsoleKeyInfo('\0', ConsoleKey.Escape, false, false, false);
             return cki.Key.ToString();
         }
     }
