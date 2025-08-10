@@ -101,6 +101,16 @@ if ($WithDocument) {
         exit 1348658072
     }
 
+    try {
+        gwtc -h | Out-Null
+    } catch [System.Management.Automation.CommandNotFoundException] {
+        Write-Error @"
+ドキュメントも併せてビルドするには、予め Github Wikito Converter をインストールしておく必要があります。
+（Node.js を導入した上で、 ``> npm install -g github-wikito-converter`` するのが簡単です）
+"@
+        exit 2028074877
+    }
+
     $wiki = '.\JVLinkToSQLite.wiki'
     if (!(Test-Path $wiki) -or !(0 -lt (dir $wiki '*.md').Length)) {
         Write-Error @"
