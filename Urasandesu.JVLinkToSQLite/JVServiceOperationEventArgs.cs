@@ -23,6 +23,7 @@
 // additional permission to convey the resulting work.
 
 using System;
+using System.Threading;
 
 namespace Urasandesu.JVLinkToSQLite
 {
@@ -31,6 +32,16 @@ namespace Urasandesu.JVLinkToSQLite
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public new static readonly JVServiceOperationEventArgs Empty = new JVServiceOperationEventArgs();
 
-        public JVServiceOperationEventArgs() { }
+        public JVServiceOperationEventArgs() 
+        {
+            OperationCancelToken = CancellationToken.None;
+        }
+
+        public JVServiceOperationEventArgs(CancellationToken oprCnclTkn)
+        {
+            OperationCancelToken = oprCnclTkn;
+        }
+
+        public CancellationToken OperationCancelToken { get; private set; }
     }
 }

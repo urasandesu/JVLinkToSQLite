@@ -22,6 +22,7 @@
 // by the terms of ObscUra's license, the licensors of this Program grant you 
 // additional permission to convey the resulting work.
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Urasandesu.JVLinkToSQLite.JVLinkWrappers;
@@ -36,6 +37,7 @@ namespace Urasandesu.JVLinkToSQLite.Operators
                                             string debugMessage,
                                             string debugCauseAndTreatment,
                                             JVLinkResult rslt,
+                                            Exception ex,
                                             string filePath,
                                             int lineNumber)
         {
@@ -45,6 +47,7 @@ namespace Urasandesu.JVLinkToSQLite.Operators
             DebugMessage = debugMessage;
             DebugCauseAndTreatment = debugCauseAndTreatment;
             SourceResult = rslt;
+            SourceException = ex;
             CallerFilePath = filePath;
             CallerLineNumber = lineNumber;
         }
@@ -55,6 +58,7 @@ namespace Urasandesu.JVLinkToSQLite.Operators
         public string DebugMessage { get; }
         public string DebugCauseAndTreatment { get; }
         public JVLinkResult SourceResult { get; }
+        public Exception SourceException { get; }
         public string CallerFilePath { get; }
         public int CallerLineNumber { get; }
 
@@ -73,6 +77,7 @@ namespace Urasandesu.JVLinkToSQLite.Operators
                                                     rslt.DebugMessage,
                                                     rslt.DebugCauseAndTreatment,
                                                     rslt,
+                                                    null, 
                                                     filePath,
                                                     lineNumber);
         }
@@ -87,6 +92,27 @@ namespace Urasandesu.JVLinkToSQLite.Operators
                                                     $"[{methodName}]正常。RC={(int)ReturnCodeRanges.Success}",
                                                     "-",
                                                     null,
+                                                    null, 
+                                                    filePath,
+                                                    lineNumber);
+        }
+
+        public static JVLinkServiceOperationResult Exception(Exception ex,
+                                                             [CallerFilePath] string filePath = "",
+                                                             [CallerLineNumber] int lineNumber = -1)
+        {
+            if (ex == null)
+            {
+                throw new System.ArgumentNullException(nameof(ex));
+            }
+
+            return new JVLinkServiceOperationResult(null,
+                                                    JVResultInterpretation.Error,
+                                                    (int)ReturnCodeRanges.UnkownException,
+                                                    ex.Message,
+                                                    "-",
+                                                    null,
+                                                    ex,
                                                     filePath,
                                                     lineNumber);
         }

@@ -88,7 +88,7 @@
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
-    <Reference Include="Urasandesu.JVLinkToSQLite.JVData, Version=0.1.0.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Urasandesu.JVLinkToSQLite.JVData">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Urasandesu.JVLinkToSQLite.JVData\bin\Urasandesu.JVLinkToSQLite.JVData.dll</HintPath>
     </Reference>

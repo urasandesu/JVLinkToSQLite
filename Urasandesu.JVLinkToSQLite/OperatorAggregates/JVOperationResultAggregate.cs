@@ -22,8 +22,10 @@
 // by the terms of ObscUra's license, the licensors of this Program grant you 
 // additional permission to convey the resulting work.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Urasandesu.JVLinkToSQLite.JVLinkWrappers;
 using Urasandesu.JVLinkToSQLite.Operators;
 
 namespace Urasandesu.JVLinkToSQLite.OperatorAggregates
@@ -32,9 +34,14 @@ namespace Urasandesu.JVLinkToSQLite.OperatorAggregates
     {
         public IReadOnlyList<JVLinkServiceOperationResult> OperationResults { get; }
         public bool AreAllSucceeded { get; }
-        public string FirstDebugMessage { get; }
-        public int FirstReturnCode { get; }
+
         public IReadOnlyList<object> FirstArguments { get; }
+        public JVResultInterpretation FirstInterpretation { get; }
+        public int FirstReturnCode { get; }
+        public string FirstDebugMessage { get; }
+        public string FirstDebugCauseAndTreatment { get; }
+        public JVLinkResult FirstSourceResult { get; }
+        public Exception FirstSourceException { get; }
         public string FirstCallerFilePath { get; }
         public int FirstCallerLineNumber { get; }
 
@@ -48,9 +55,13 @@ namespace Urasandesu.JVLinkToSQLite.OperatorAggregates
                 AreAllSucceeded = firstErrorResult == null;
                 if (firstErrorResult != null)
                 {
+                    FirstArguments = firstErrorResult.Arguments;
+                    FirstInterpretation = firstErrorResult.Interpretation;
                     FirstReturnCode = firstErrorResult.ReturnCode;
                     FirstDebugMessage = firstErrorResult.DebugMessage;
-                    FirstArguments = firstErrorResult.Arguments;
+                    FirstDebugCauseAndTreatment = firstErrorResult.DebugCauseAndTreatment;
+                    FirstSourceResult = firstErrorResult.SourceResult;
+                    FirstSourceException = firstErrorResult.SourceException;
                     FirstCallerFilePath = firstErrorResult.CallerFilePath;
                     FirstCallerLineNumber = firstErrorResult.CallerLineNumber;
                 }

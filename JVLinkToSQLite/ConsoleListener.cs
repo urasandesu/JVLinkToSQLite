@@ -102,7 +102,7 @@ namespace JVLinkToSQLite
             {
                 MyConsole.WriteLine($"[INFO]{me.Message}");
                 MyConsole.WriteLine($"[INFO]完了するには何かキーを押してください．．．");
-                MyConsole.ReadKey();
+                MyConsole.ReadKey(e.OperationCancelToken);
             }
             else
             {

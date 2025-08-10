@@ -188,8 +188,8 @@ namespace Urasandesu.JVLinkToSQLite.Settings
             {
                 IsEnabled = IsEnabled,
                 DataSpec = DataSpec,
-                DataSpecKey = DataSpecKey.Clone(),
-                ExcludedRecordSpecs = ExcludedRecordSpecs.ToArray(),
+                DataSpecKey = DataSpecKey?.Clone(),
+                ExcludedRecordSpecs = ExcludedRecordSpecs?.ToArray(),
                 TimeIntervalUnit = TimeIntervalUnit
             };
         }

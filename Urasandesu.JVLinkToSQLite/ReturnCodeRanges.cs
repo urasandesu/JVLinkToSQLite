@@ -31,6 +31,7 @@ namespace Urasandesu.JVLinkToSQLite
         JVLinkEnd = -1000,
 
         UrasandesuJVLinkToSQLiteStart = JVLinkEnd - 1000,
+        UnkownException = UrasandesuJVLinkToSQLiteStart - 1,
         UrasandesuJVLinkToSQLiteEnd = UrasandesuJVLinkToSQLiteStart - 1000
     }
 }

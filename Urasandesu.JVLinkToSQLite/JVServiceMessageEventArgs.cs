@@ -23,6 +23,7 @@
 // additional permission to convey the resulting work.
 
 using System;
+using System.Threading;
 
 namespace Urasandesu.JVLinkToSQLite
 {
@@ -31,7 +32,12 @@ namespace Urasandesu.JVLinkToSQLite
         private Func<object[], string> _messaging;
         private object[] _params;
 
-        public JVServiceMessageEventArgs(Func<object[], string> messaging, params object[] @params)
+        public JVServiceMessageEventArgs(Func<object[], string> messaging, params object[] @params) :
+            this(CancellationToken.None, messaging, @params)
+        { }
+
+        public JVServiceMessageEventArgs(CancellationToken oprCnclTkn, Func<object[], string> messaging, params object[] @params) :
+            base(oprCnclTkn)
         {
             _messaging = messaging;
             _params = @params;
